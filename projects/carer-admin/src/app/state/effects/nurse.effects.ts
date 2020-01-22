@@ -9,9 +9,18 @@ export class NurseEffects {
 
   loadNurses$ = createEffect(() => this.actions$.pipe(
     ofType<any>(NurseActions.loadNurses),
-    switchMap((action) => {
+    switchMap(() => {
       return this.nursesService.getAllNurses().pipe(
-        map((nurse) =>  NurseActions.loadNursesComplete( {nurse} ))
+        map((nurses) => NurseActions.loadNursesComplete( {nurses} ))
+      );
+    })
+  ));
+
+  getNurse$ = createEffect(() => this.actions$.pipe(
+    ofType<any>(NurseActions.getNurse),
+    switchMap((action) => {
+      return this.nursesService.getNurse(action.id).pipe(
+        map((nurse) => NurseActions.getNurseLoaded({nurse}))
       );
     })
   ));

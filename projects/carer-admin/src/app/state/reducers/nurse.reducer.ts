@@ -5,21 +5,22 @@ import { NurseActions } from '../actions/';
 
 
 export interface NurseState {
-  nurse: Nurse[];
+  nurses: Nurse[];
+  selectedNurse: Nurse;
 }
 
 export const initialState: NurseState = {
-  nurse: undefined,
+  nurses: undefined,
+  selectedNurse: undefined
 };
 
 const nurseReducer = createReducer(
   initialState,
   on(NurseActions.loadNurses, (state) => (state)),
-  on(NurseActions.loadNursesComplete, (state, {nurse}) => {
-   return ({ ...state, nurse });
-  }
-
-));
+  on(NurseActions.loadNursesComplete, (state, {nurses}) => ({ ...state, nurses })),
+  on(NurseActions.getNurse, (state) => (state)),
+  on(NurseActions.getNurseLoaded, (state, {nurse}) => ({ ...state, selectedNurse: nurse})),
+);
 
 export function reducer(state: NurseState | undefined, action: Action) {
   return nurseReducer(state, action);

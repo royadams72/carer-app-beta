@@ -14,9 +14,12 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { NursesService } from './shared/services/nurses/nurses.service';
+import { NavigationComponent } from './core/components/navigation/navigation.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,7 @@ import { NursesService } from './shared/services/nurses/nurses.service';
     AngularFirestoreModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([AppEffects, NurseEffects]),
   ],
   providers: [NursesService],
   bootstrap: [AppComponent]

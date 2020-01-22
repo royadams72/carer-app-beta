@@ -10,19 +10,17 @@ import { NursesService } from '../../shared/services/nurses/nurses.service';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 @Injectable()
 export class AppEffects {
-  private itemsCollection: AngularFirestoreCollection<any>;
+  // private itemsCollection: AngularFirestoreCollection<any>;
 
-  loadNurses$ = createEffect(() => this.actions$.pipe(
-    ofType<any>(NurseActions.loadNurses),
-    switchMap(() => {
-      return this.nursesService.getAllNurses().pipe(
-        map((nurse) =>  NurseActions.loadNursesComplete({ nurse }))
-      );
-    })
-  ));
+  // loadNurses$ = createEffect(() => this.actions$.pipe(
+  //   ofType<any>(NurseActions.loadNurses),
+  //   switchMap(() => {
+  //     return this.nursesService.getAllNurses().pipe(
+  //       map((nurse) =>  NurseActions.loadNursesComplete({ nurse }))
+  //     );
+  //   })
+  // ));
 
 
-  constructor(private actions$: Actions,
-              private nursesService: NursesService,
-              private angularFireStore: AngularFirestore) {}
+  constructor() {}
 }
