@@ -1,0 +1,13 @@
+<div *ngIf='selectedNurse$ | async as n'>
+    <a routerLink="/nurses/edit-nurse/{{n.id}}" routerLinkActive="active">Button to edit Nurse</a>
+<p>{{n.name}}</p>
+<p>{{n.dob}}</p>
+<p>{{n.address_line1}}</p>
+<p>{{n.address_line2}}</p>
+<p>{{n.city}}</p>
+<p>{{n.post_code}}</p>
+<p>{{n.probation_end}}</p>
+<p>{{n.phone}}</p>
+<p>{{n.available}}</p>
+<p>{{n.band}}</p>
+</div>
