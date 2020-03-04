@@ -21,8 +21,8 @@ nurses$: Observable<Nurse[]>;
   }
 
   ngOnInit(): void {
-   
     this.nurses$ = this.store.select(nurses);
+    console.log(this.nurses$)
   }
 
 }
