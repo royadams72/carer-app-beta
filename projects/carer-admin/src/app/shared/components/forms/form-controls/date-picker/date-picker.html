@@ -1,0 +1,10 @@
+<mat-form-field appearance="{{config?.appearance}}">
+    <mat-label>{{config.label}}</mat-label>
+    <!-- <input matInput placeholder="{{config.placeholder}}" [formControl]="control"> -->
+    <input matInput [matDatepicker]="picker" [formControl]="control">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-hint>{{config.hint}}</mat-hint>
+    <mat-error *ngIf="control?.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+   

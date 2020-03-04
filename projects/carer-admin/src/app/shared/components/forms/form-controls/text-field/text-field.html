@@ -1,0 +1,7 @@
+<mat-form-field appearance="{{config.appearance}}">
+    <mat-label>{{config.label}}</mat-label>
+    <input matInput placeholder="{{config.placeholder}}" [formControl]="control">
+    <mat-hint>{{config.hint}}</mat-hint>
+    <mat-error *ngIf="control.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>
+   

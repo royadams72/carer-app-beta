@@ -46,6 +46,11 @@ getNurse(nurseId: string): Observable<Nurse> {
     }));
  }
 
+updateNurse(nurseId: string, nurse: Nurse) {
+  const doc = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
+  return doc.set(nurse);
+ }
+
   addNurse(nurse: Nurse) {
     this.itemsCollection.add(nurse);
   }

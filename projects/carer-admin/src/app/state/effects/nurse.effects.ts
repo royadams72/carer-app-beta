@@ -25,6 +25,15 @@ export class NurseEffects {
     })
   ));
 
+  updateNurse$ = createEffect(() => this.actions$.pipe(
+    ofType<any>(NurseActions.updateNurse),
+    switchMap((action) => {
+      return this.nursesService.updateNurse(action.nurseId, action.nurse).then(
+        (nurse) => NurseActions.nurseUpdated()
+      );
+    })
+  ));
+
   constructor(
     private actions$: Actions,
     private nursesService: NursesService

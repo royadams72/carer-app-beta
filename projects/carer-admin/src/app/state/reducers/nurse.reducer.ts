@@ -20,6 +20,7 @@ const nurseReducer = createReducer(
   on(NurseActions.loadNursesComplete, (state, {nurses}) => ({ ...state, nurses })),
   on(NurseActions.getNurse, (state) => (state)),
   on(NurseActions.getNurseLoaded, (state, {nurse}) => ({ ...state, selectedNurse: nurse})),
+  on(NurseActions.updateNurse, (state) => (state)),
 );
 
 export function reducer(state: NurseState | undefined, action: Action) {
