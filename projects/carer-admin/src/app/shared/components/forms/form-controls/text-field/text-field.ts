@@ -1,8 +1,7 @@
 
 
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FormFieldModel } from '../form-field.model';
+import { FormModel } from '../form.model';
 import { FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
@@ -11,7 +10,7 @@ import { FormGroup, AbstractControl } from '@angular/forms';
   styleUrls: []
 })
 export class TextFieldComponent implements OnInit {
-@Input() config: FormFieldModel;
+@Input() config: FormModel;
 @Input() formGroup: FormGroup;
 control: AbstractControl;
 
@@ -19,7 +18,8 @@ control: AbstractControl;
   ngOnInit(): void {
     if (this.formGroup) {
       this.control = this.formGroup.get(this.config.name);
-      // this.control.disable();
+
+      
     }
   }
 

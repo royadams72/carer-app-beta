@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
-
 import { ControlType } from '../../../core/enum/control-type';
-
 /**
  * Generic class to allow controlling formgroups
  */
 @Injectable()
 export class FormService {
-
     /**
      * Constructor for service
      */
@@ -79,6 +76,11 @@ export class FormService {
             }
         });
     }
+
+   returnFormVal(val): any {
+        return console.log(`returnFormVal ${val}`);
+    }
+
 
   /**
    * resets a form controls value and state

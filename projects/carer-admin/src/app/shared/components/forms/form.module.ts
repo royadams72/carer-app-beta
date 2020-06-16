@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../core/modules/material-module';
 import { TextFieldComponent } from './form-controls/text-field/text-field';
 import { DatePickerComponent } from './form-controls/date-picker/date-picker';
+import { SelectComponent } from './form-controls/select/select';
 
 const routes: Routes = [
 ];
@@ -17,7 +18,7 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TextFieldComponent, DatePickerComponent],
-  exports: [TextFieldComponent, DatePickerComponent]
+  declarations: [TextFieldComponent, DatePickerComponent, SelectComponent],
+  exports: [TextFieldComponent, DatePickerComponent, SelectComponent]
 })
 export class CustomFormModule {}

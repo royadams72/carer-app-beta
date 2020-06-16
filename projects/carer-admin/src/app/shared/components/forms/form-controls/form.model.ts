@@ -1,6 +1,6 @@
 import { Validators } from '@angular/forms';
 
-export interface FormFieldModel {
+export interface FormModel {
     name: string;
     label: string;
     placeholder?: string;
@@ -9,4 +9,6 @@ export interface FormFieldModel {
     validators?: Validators[];
     errorMessages?: object;
     controlType?: any;
+    options?: Array<any>;
+    selected?: any;
 }

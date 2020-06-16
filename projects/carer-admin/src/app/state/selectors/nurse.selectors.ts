@@ -10,16 +10,25 @@ export const nurses = createSelector(
 );
 
 const selectedNurse = (state: State) => state.nurseState;
+
 export const nurseSelected = createSelector(
   selectedNurse,
-  (state: NurseState) => state.selectedNurse
+  (state: NurseState) => {
+    if (state.selectedNurse) {
+    return state.selectedNurse;
+    }
+
+  }
 );
 
-export const nursesVM = createSelector(
-  selectNurses,
-  (state: NurseState) => {
-    console.log(state.nurses);
-    return state.nurses;
+export const getSelectedFormControl = createSelector(
+  selectedNurse,
+  (state: NurseState, props: any) => {
+    if (state.selectedNurse) {
+    const selected = props.selected;
+    console.log(props.selected);
+    return state.selectedNurse[selected];
+    }
   }
 );
 

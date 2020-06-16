@@ -22,7 +22,7 @@ export const addNurse = createAction(
 );
 
 export const updateNurse = createAction(
-  '[NurseState] Updating Nurse', props<{nurseId: string, nurse: Nurse}>()
+  '[NurseState] Updating Nurse', props<{nurse: Nurse}>()
 );
 
 export const nurseUpdated = createAction(

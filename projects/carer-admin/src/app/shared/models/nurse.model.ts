@@ -14,6 +14,7 @@ export interface NurseAppraisal {
         notes?: string;
     }>;
 }
+
 export interface Nurse {
     id?: string;
     address_line1?: string;
@@ -23,6 +24,7 @@ export interface Nurse {
     city?: string;
     clients?: NurseClients;
     dbs?: string;
+    distance_willing_to_work?: string;
     delete_date?: string[];
     dob?: string;
     first_name?: string;
@@ -34,4 +36,6 @@ export interface Nurse {
     skills?: string[];
     start_date?: string;
     training_review_date?: string;
+    willing_to_work: number;
 }
+

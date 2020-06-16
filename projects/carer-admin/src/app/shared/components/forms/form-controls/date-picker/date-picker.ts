@@ -1,11 +1,10 @@
 
 
-import { Component, OnInit, Input, AfterViewInit, ViewChild} from '@angular/core';
-import { FormFieldModel } from '../form-field.model';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormModel } from '../form.model';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { MatDatepicker } from '@angular/material/datepicker';
 // extend NativeDateAdapter's format method to specify the date format.
 export class CustomDateAdapter extends NativeDateAdapter {
 
@@ -44,8 +43,8 @@ export const MY_DATE_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
-export class DatePickerComponent implements OnInit, AfterViewInit {
-@Input() config: FormFieldModel;
+export class DatePickerComponent implements OnInit {
+@Input() config: FormModel;
 @Input() formGroup: FormGroup;
 isValidMoment = false;
 control: AbstractControl;
@@ -53,19 +52,9 @@ control: AbstractControl;
   ngOnInit(): void {
     if (this.formGroup) {
       this.control = this.formGroup.get(this.config.name);
-      // this.control.patchValue(new Date('12-22-1972'))
     }
   }
-ngAfterViewInit() {
-  // this.picker._selectedChanged.subscribe(
-  //   (newDate: Moment) => {
-  //     this.isValidMoment = moment.isMoment(newDate);
-  //   },
-  //   (error) => {
-  //     throw Error(error);
-  //   }
-  // );
-}
+
   getErrorMessage(): string {
   const error = Object.keys(this.control.errors)[0];
   return this.config.errorMessages[error];

@@ -3,6 +3,6 @@ export enum ControlType {
     Array = 'Array',
     DateArray = 'DateArray',
     Control = 'Control',
-    DatePicker = 'DatePicker'
-
+    DatePicker = 'DatePicker',
+    Option = 'Option'
 }

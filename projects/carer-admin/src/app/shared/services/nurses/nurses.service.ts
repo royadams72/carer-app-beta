@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Nurse } from '../../models/nurse.model';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { Observable, of, from } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +24,8 @@ export class NursesService {
     });
 }
 
-getAllNurses() {
+getAllNurses(): Observable<any> {
+ console.log('getNurse');
  return this.itemsCollection.snapshotChanges()
  .pipe(map(actions => {
     return actions.map(a => {
@@ -46,9 +48,10 @@ getNurse(nurseId: string): Observable<Nurse> {
     }));
  }
 
-updateNurse(nurseId: string, nurse: Nurse) {
-  const doc = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
-  return doc.set(nurse);
+updateNurse(nurse: Nurse): Observable<any> {
+  console.log('updateNurse')
+  const doc = this.angularFireStore.doc<Nurse>(`nurses/${nurse.id}`);
+  return from(doc.update(nurse));
  }
 
   addNurse(nurse: Nurse) {

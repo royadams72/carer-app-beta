@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
 import { NurseActions } from '../actions/';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, mergeMap } from 'rxjs/operators';
 
 import { NursesService } from '../../shared/services/nurses/nurses.service';
 @Injectable()
@@ -9,7 +9,7 @@ export class NurseEffects {
 
   loadNurses$ = createEffect(() => this.actions$.pipe(
     ofType<any>(NurseActions.loadNurses),
-    switchMap(() => {
+    switchMap((action) => {
       return this.nursesService.getAllNurses().pipe(
         map((nurses) => NurseActions.loadNursesComplete( {nurses} ))
       );
@@ -28,9 +28,10 @@ export class NurseEffects {
   updateNurse$ = createEffect(() => this.actions$.pipe(
     ofType<any>(NurseActions.updateNurse),
     switchMap((action) => {
-      return this.nursesService.updateNurse(action.nurseId, action.nurse).then(
-        (nurse) => NurseActions.nurseUpdated()
-      );
+      console.log(action);
+      return this.nursesService.updateNurse(action.nurse).pipe(
+        map((nurse) => NurseActions.nurseUpdated())
+        );
     })
   ));
 

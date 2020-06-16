@@ -1,0 +1,8 @@
+<mat-form-field appearance="{{config?.appearance}}">
+    <mat-label>{{config.label}}</mat-label>
+    <mat-select [(value)]="selected" (selectionChange)="onChange($event)">
+        <mat-option *ngFor="let option of options" [value]="option.value">
+            {{option.viewValue}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
