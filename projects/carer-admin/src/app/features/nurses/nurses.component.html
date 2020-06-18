@@ -1,0 +1,3 @@
+<li *ngFor="let nurse of nurses$ | async; let i = index">
+    <span>{{ i + 1}}.</span>  <a routerLink="/nurses/view-nurse/{{nurse.id}}" routerLinkActive="active">{{nurse.first_name}}</a>
+</li>

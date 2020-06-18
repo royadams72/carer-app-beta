@@ -6,7 +6,28 @@ export const loadNurses = createAction(
 );
 
 export const loadNursesComplete = createAction(
-  '[NurseState] Nurses Loaded', props<{nurse: Nurse[]}>()
+  '[NurseState] Nurses Loaded', props<{nurses: Nurse[]}>()
 );
 
-export type NurseActionsUnion = ReturnType<typeof loadNurses | typeof loadNursesComplete>;
+export const getNurse = createAction(
+  '[NurseState] Get Nurse', props<{id: string}>()
+);
+
+export const getNurseLoaded = createAction(
+  '[NurseState] Get Nurse Loaded', props<{nurse: Nurse}>()
+);
+
+export const addNurse = createAction(
+  '[NurseState] Adding Nurse', props<{nurse: Nurse}>()
+);
+
+export const updateNurse = createAction(
+  '[NurseState] Updating Nurse', props<{nurse: Nurse}>()
+);
+
+export const nurseUpdated = createAction(
+  '[NurseState] Nurse Updated'
+);
+
+export type NurseActionsUnion = ReturnType<typeof loadNurses | typeof loadNursesComplete |
+            typeof getNurse | typeof getNurseLoaded | typeof addNurse | typeof updateNurse | typeof nurseUpdated>;

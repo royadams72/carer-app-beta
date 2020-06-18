@@ -7,16 +7,22 @@ import { StoreModule } from '@ngrx/store';
 import { reducers } from './state/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './state/effects/app.effects';
-// import { reducer } from './state/reducers/nurse.reducer';
 
 import { NurseEffects } from './state/effects/nurse.effects';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { NursesService } from './shared/services/nurses/nurses.service';
+import { NavigationComponent } from './shared/components/navigation/navigation.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './core/modules/material-module';
+import { FormService } from './shared/services/forms/form.service';
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -26,9 +32,12 @@ import { NursesService } from './shared/services/nurses/nurses.service';
     AngularFirestoreModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([AppEffects, NurseEffects]),
+    BrowserAnimationsModule,
+    MaterialModule
   ],
-  providers: [NursesService],
+  providers: [NursesService, FormService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
