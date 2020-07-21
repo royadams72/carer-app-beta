@@ -1,18 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NurseActions } from 'carer-admin/src/app/state/actions';
 import { State } from '../../../state/reducers';
-import { NursesService } from 'carer-admin/src/app/shared/services/nurses/nurses.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Nurse } from 'carer-admin/src/app/shared/models/nurse.model';
-import { nurseSelected, getSelectedFormControl } from 'carer-admin/src/app/state/selectors';
+import { getSelectedNurse } from 'carer-admin/src/app/state/selectors';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormService } from 'carer-admin/src/app/shared/services/forms/form.service';
 import { editNurseForm } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
-import { MockNurse } from 'carer-admin/src/app/shared/mock-data/mock-nurse';
-import { tap } from 'rxjs/operators';
-import { FormModel } from 'carer-admin/src/app/shared/components/forms/form-controls/form.model';
 
 @Component({
   selector: 'app-edit-nurse',
@@ -27,13 +23,12 @@ export class EditNurseComponent implements OnInit {
   private subscriptions = new Subscription();
   formConfig = editNurseForm;
   id: string;
-  distanceSelected: string;
+
   constructor(private store: Store<State>,
               private route: ActivatedRoute,
               private formService: FormService) {
-    this.id = this.route.snapshot.params.id;
-    this.store.dispatch(NurseActions.getNurse({id: this.id}));
-    this.selectedNurse$ = this.store.select(nurseSelected);
+    // this.id = this.route.snapshot.params.id;
+    this.selectedNurse$ = this.store.select(getSelectedNurse);
   }
 
   ngOnInit() {
@@ -44,12 +39,9 @@ export class EditNurseComponent implements OnInit {
       }
     }));
 
-    // this.subscriptions.add(
-    //   this.store.select(getSelectedFormControl, {selected: 'distance_willing_to_work'})
-    //     .subscribe((res) => {this.distanceSelected = res; console.log(res); } )
-    //   );
 
   }
+
 
   onSubmit() {
     console.log(this.mapForm(this.form, this.formConfig));
@@ -68,4 +60,6 @@ export class EditNurseComponent implements OnInit {
     return submitData;
   }
 
+
 }
+

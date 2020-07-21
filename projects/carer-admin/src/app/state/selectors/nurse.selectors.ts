@@ -11,7 +11,7 @@ export const nurses = createSelector(
 
 const selectedNurse = (state: State) => state.nurseState;
 
-export const nurseSelected = createSelector(
+export const getSelectedNurse = createSelector(
   selectedNurse,
   (state: NurseState) => {
     if (state.selectedNurse) {
@@ -21,14 +21,24 @@ export const nurseSelected = createSelector(
   }
 );
 
-export const getSelectedFormControl = createSelector(
+export const getSchedule = createSelector(
   selectedNurse,
-  (state: NurseState, props: any) => {
+  (state: NurseState) => {
     if (state.selectedNurse) {
-    const selected = props.selected;
-    console.log(props.selected);
-    return state.selectedNurse[selected];
+    return state.selectedNurse.schedule;
     }
+
   }
 );
+
+// export const getSelectedNurse = createSelector(
+//   selectedNurse,
+//   (state: NurseState, props: any) => {
+//     if (state) {
+//     console.log(state, props.id);
+//     const selected = props.id;
+//     return state.selectedNurse[selected];
+//     }
+//   }
+// );
 

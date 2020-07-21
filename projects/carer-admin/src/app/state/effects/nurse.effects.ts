@@ -16,6 +16,15 @@ export class NurseEffects {
     })
   ));
 
+  // getNurse$ = createEffect(() => this.actions$.pipe(
+  //   ofType<any>(NurseActions.getNurse),
+  //   switchMap((action) => {
+  //     return this.nursesService.getNurse(action.id).pipe(
+  //       map((nurse) => NurseActions.getNurseLoaded({nurse}))
+  //     );
+  //   })
+  // ));
+
   getNurse$ = createEffect(() => this.actions$.pipe(
     ofType<any>(NurseActions.getNurse),
     switchMap((action) => {
