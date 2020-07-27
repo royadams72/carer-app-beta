@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Nurse } from '../../models/nurse.model';
-import { map, mergeMap } from 'rxjs/operators';
+import { firestore, database } from 'firebase/app';
+import { Nurse, Schedule, ScheduleData } from '../../models/nurse.model';
+import { map, mergeMap, take } from 'rxjs/operators';
 import { Observable, of, from } from 'rxjs';
 
 @Injectable({
@@ -25,7 +26,7 @@ export class NursesService {
 }
 
 getAllNurses(): Observable<any> {
- console.log('getNurse');
+//  console.log('getNurse');
  return this.itemsCollection.snapshotChanges()
  .pipe(map(actions => {
     return actions.map(a => {
@@ -49,12 +50,43 @@ getNurse(nurseId: string): Observable<Nurse> {
  }
 
 updateNurse(nurse: Nurse): Observable<any> {
-  console.log('updateNurse')
+  // console.log('updateNurse')
   const doc = this.angularFireStore.doc<Nurse>(`nurses/${nurse.id}`);
   return from(doc.update(nurse));
  }
 
   addNurse(nurse: Nurse) {
     this.itemsCollection.add(nurse);
+  }
+
+  addNurseAppointment(id: string, appointment: Schedule) {
+    console.log(appointment);
+    const doc = this.angularFireStore.doc<Nurse>(`nurses/${id}`);
+    return from(doc.update({ schedule: firestore.FieldValue.arrayUnion(appointment) }));
+  }
+  updateNurseAppointment(id: string, appointment: Schedule) {
+    const doc = this.angularFireStore.doc<Nurse>(`nurses/${id}`);
+    console.log(appointment);
+    this.findArrayItemById(id, appointment.id)
+    .pipe(take(1))
+    .subscribe((data) => {
+       console.log('data= ', data);
+    });
+    console.log(appointment);
+    return from(doc.update({ schedule: firestore.FieldValue.arrayUnion(appointment)}));
+  }
+
+  findArrayItemById(nurseId, appointmentId: string) {
+    const doc = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
+    return doc.valueChanges()
+      .pipe(
+        map(nurse => {
+          // const data = nurse.payload.data();
+          // const id = changes.payload.id;
+          // return { id, ...data };
+          console.log(nurse.schedule);
+          const originalAppointment: Schedule = nurse.schedule.find((appointment) => appointment.id === appointmentId);
+          return from(doc.update({ schedule: firestore.FieldValue.arrayRemove(originalAppointment) })).subscribe((d) => console.log(d));
+        }));
   }
 }

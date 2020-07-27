@@ -8,6 +8,8 @@ import { DatePickerComponent } from './form-controls/date-picker/date-picker';
 import { SelectComponent } from './form-controls/select/select';
 import { SchedulerComponent } from './form-controls/scheduler/scheduler.component';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
+
+
 const routes: Routes = [
 ];
 
@@ -20,6 +22,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [TextFieldComponent, DatePickerComponent, SelectComponent, SchedulerComponent, jqxSchedulerComponent],
-  exports: [TextFieldComponent, DatePickerComponent, SelectComponent]
+  exports: [TextFieldComponent, DatePickerComponent, SelectComponent, SchedulerComponent]
 })
 export class CustomFormModule {}

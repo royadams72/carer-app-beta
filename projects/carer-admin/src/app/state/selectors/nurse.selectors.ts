@@ -20,6 +20,15 @@ export const getSelectedNurse = createSelector(
 
   }
 );
+export const getSelectedNurseId = createSelector(
+  selectedNurse,
+  (state: NurseState) => {
+    if (state.selectedNurse) {
+    return state.selectedNurse.id;
+    }
+
+  }
+);
 
 export const getSchedule = createSelector(
   selectedNurse,

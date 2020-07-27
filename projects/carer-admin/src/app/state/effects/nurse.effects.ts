@@ -44,6 +44,25 @@ export class NurseEffects {
     })
   ));
 
+  addNurseAppointment$ = createEffect(()  => this.actions$.pipe(
+    ofType<any>(NurseActions.addNurseAppointment),
+    switchMap((action) => {
+      console.log(action);
+      return this.nursesService.addNurseAppointment(action.id, action.schedule).pipe(
+        map(() => NurseActions.nurseAppointmentAdded())
+        );
+    })
+  ));
+
+  updateNurseAppointment$ = createEffect(()  => this.actions$.pipe(
+    ofType<any>(NurseActions.updateNurseAppointment),
+    switchMap((action) => {
+      console.log(action);
+      return this.nursesService.updateNurseAppointment(action.id, action.schedule).pipe(
+        map(() => NurseActions.appointmentUpdated())
+        );
+    })
+  ));
   constructor(
     private actions$: Actions,
     private nursesService: NursesService

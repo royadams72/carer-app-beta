@@ -1,5 +1,6 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
+import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
 
 @Component({
   selector: 'app-scheduler',
@@ -9,6 +10,11 @@ import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
 
 export class SchedulerComponent implements OnInit, AfterViewInit {
   @ViewChild('schedulerReference', {static: false}) scheduler: jqxSchedulerComponent;
+  @Input() appointments: Array<Schedule>;
+  @Output() updatedAppointment: EventEmitter<any> = new EventEmitter();
+  @Output() deletedAppointment: EventEmitter<any> = new EventEmitter();
+  @Output() addedAppointment: EventEmitter<any> = new EventEmitter();
+
   source: any = {
     dataType: 'array',
     dataFields: [
@@ -17,15 +23,16 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
         { name: 'location', type: 'string' },
         { name: 'subject', type: 'string' },
         { name: 'calendar', type: 'string' },
+        { name: 'recurrenceRule', type: 'string' },
         { name: 'start', type: 'date' },
         { name: 'end', type: 'date' }
     ],
     id: 'id',
-    localData: this.generateAppointments()
+    localData: this.appointments
 };
 
-  dataAdapter: any = new jqx.dataAdapter(this.source);
-  date: any = new jqx.date(2016, 11, 23);
+  dataAdapter = new jqx.dataAdapter(this.source);
+  // date: any = new jqx.date(new Date());
 
   appointmentDataFields: any = {
     from: 'start',
@@ -33,6 +40,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
     id: 'id',
     description: 'description',
     location: 'location',
+    recurrencePattern: 'recurrenceRule',
     subject: 'subject',
     resourceId: 'calendar'
   };
@@ -50,78 +58,39 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
       'monthView'
   ];
   constructor() { }
-  appointmentChange($event) {
-    console.log($event.args.appointment);
-    //
+  appointmentUpdated($event) {
+    // Appointment updated
+    const {originalData: appointment, originalData : {end: endDateStr, start: startDateStr }} = $event.args.appointment;
+    // const appointment = this.getAppointment($event);
+    appointment.end = endDateStr.toISOString();
+    appointment.start = startDateStr.toISOString();
+    this.updatedAppointment.emit(appointment);
   }
+
+  appointmentDeleted($event) {
+    this.deletedAppointment.emit($event.args.appointment.originalData.id);
+  }
+
+  appointmentAdded($event) {
+    // console.log($event.args.appointment.originalData.end, $event.args.appointment);
+    const {originalData: appointment, originalData : {end: endDateStr, start: startDateStr }} = $event.args.appointment;
+    // const appointment = $event.args.appointment.originalData;
+    appointment.end = endDateStr.toISOString();
+    appointment.start = startDateStr.toISOString();
+    this.addedAppointment.emit(appointment);
+  }
+
   ngOnInit() {
   }
+
   ngAfterViewInit(): void {
-    this.scheduler.ensureAppointmentVisible('id1');
-    // const value = this.scheduler.exportData(xls);
+    this.source.localData = this.appointments;
+    this.scheduler.ensureAppointmentVisible('12345');
+    this.dataAdapter = new jqx.dataAdapter(this.source);
   }
-  generateAppointments(): any {
-    const appointments = new Array();
-    const appointment1 = {
-        id: 'id1',
-        description: 'George brings projector for presentations.',
-        location: '',
-        subject: 'Quarterly Project Review Meeting',
-        calendar: 'Room 1',
-        start: new Date(2016, 10, 23, 9, 0, 0),
-        end: new Date(2016, 10, 23, 16, 0, 0)
-    };
-    const appointment2 = {
-        id: 'id2',
-        description: '',
-        location: '',
-        subject: 'IT Group Mtg.',
-        calendar: 'Room 2',
-        start: new Date(2016, 10, 24, 10, 0, 0),
-        end: new Date(2016, 10, 24, 15, 0, 0)
-    };
-    const appointment3 = {
-        id: 'id3',
-        description: '',
-        location: '',
-        subject: 'Course Social Media',
-        calendar: 'Room 3',
-        start: new Date(2016, 10, 27, 11, 0, 0),
-        end: new Date(2016, 10, 27, 13, 0, 0)
-    };
-    const appointment4 = {
-        id: 'id4',
-        description: '',
-        location: '',
-        subject: 'New Projects Planning',
-        calendar: 'Room 2',
-        start: new Date(2016, 10, 23, 16, 0, 0),
-        end: new Date(2016, 10, 23, 18, 0, 0)
-    };
-    const appointment5 = {
-        id: 'id5',
-        description: '',
-        location: '',
-        subject: 'Interview with James',
-        calendar: 'Room 1',
-        start: new Date(2016, 10, 25, 15, 0, 0),
-        end: new Date(2016, 10, 25, 17, 0, 0)
-    };
-    const appointment6 = {
-        id: 'id6',
-        description: '',
-        location: '',
-        subject: 'Interview with Nancy',
-        calendar: 'Room 4',
-        start: new Date(2016, 10, 26, 14, 0, 0),
-        end: new Date(2016, 10, 26, 16, 0, 0)
-    };
-    appointments.push(appointment1);
-    appointments.push(appointment2);
-    appointments.push(appointment3);
-    appointments.push(appointment4);
-    appointments.push(appointment5);
-    appointments.push(appointment6);
-    return appointments;
-}
+
+  getAppointment(event: any): Schedule {
+    const appointmentsArray = this.scheduler.getDataAppointments();
+    return appointmentsArray.find((app) => app.id === event.args.appointment.id);
+  }
 }

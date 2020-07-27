@@ -5,7 +5,7 @@ import { State } from '../../../state/reducers';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Nurse } from 'carer-admin/src/app/shared/models/nurse.model';
-import { getSelectedNurse } from 'carer-admin/src/app/state/selectors';
+import { getSelectedNurse, getSelectedNurseId } from 'carer-admin/src/app/state/selectors';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormService } from 'carer-admin/src/app/shared/services/forms/form.service';
 import { editNurseForm } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
@@ -18,16 +18,16 @@ import { editNurseForm } from 'carer-admin/src/app/shared/components/forms/form-
 
 export class EditNurseComponent implements OnInit {
   selectedNurse$: Observable<Nurse>;
+  id$: Observable<string>;
   form: FormGroup;
   fb: FormBuilder = new FormBuilder();
   private subscriptions = new Subscription();
   formConfig = editNurseForm;
-  id: string;
 
   constructor(private store: Store<State>,
               private route: ActivatedRoute,
               private formService: FormService) {
-    // this.id = this.route.snapshot.params.id;
+    this.id$ = this.store.select(getSelectedNurseId);
     this.selectedNurse$ = this.store.select(getSelectedNurse);
   }
 
@@ -44,19 +44,19 @@ export class EditNurseComponent implements OnInit {
 
 
   onSubmit() {
-    console.log(this.mapForm(this.form, this.formConfig));
+    // console.log(this.mapForm(this.form, this.formConfig));
     const data = this.mapForm(this.form, this.formConfig);
     this.store.dispatch(NurseActions.updateNurse({nurse: data}));
 
   }
-
+// TODO: Put in service
   mapForm(form: FormGroup, formProperties: any ) {
     const submitData: any = {};
     Object.keys(form.controls).forEach((key) => {
         submitData[key] = form.get(key).value;
     });
     // Add id
-    submitData.id = this.id;
+    submitData.id = this.id$;
     return submitData;
   }
 

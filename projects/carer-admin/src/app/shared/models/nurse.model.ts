@@ -18,11 +18,15 @@ export interface Schedule {
     id: string;
     description: string;
     end: string;
-    location: string;
+    location?: string;
     recurrenceRule: string;
-    recurrenceException: string;
+    recurrenceException?: string;
     start: string;
-    subject: string;
+    subject?: string;
+}
+export interface ScheduleData {
+        appointment: Schedule;
+        originalData: Schedule;
 }
 export interface Nurse {
     id?: string;
@@ -42,7 +46,7 @@ export interface Nurse {
     phone?: string;
     probation_end?: string;
     registration?: { something?: string, date?: string};
-    schedule?: Schedule[];
+    schedule?: any;
     skills?: string[];
     start_date?: string;
     training_review_date?: string;

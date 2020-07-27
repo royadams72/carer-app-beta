@@ -22,14 +22,38 @@ const nurseReducer = createReducer(
   on(NurseActions.getNurse, (state) => (state)),
   on(NurseActions.getNurseLoaded, (state, action) => ({ ...state, selectedNurse: action.nurse})),
   on(NurseActions.updateNurse, update),
+  on(NurseActions.addNurseAppointment, addNurseAppointment),
+  on(NurseActions.updateNurseAppointment, updateNurseAppointment),
 );
 
 function update(state, action) {
-  // console.log(state, action)
-
   return {
     ...state,
     selectedNurse: action.nurse
+  };
+}
+
+function updateNurseAppointment(state, action) {
+  const {selectedNurse}: {selectedNurse: Nurse} = state;
+  console.log(selectedNurse);
+  const { schedule: newSchedule, schedule: {id: sid}, id} = action;
+  const scheduleToRemoveIndex = selectedNurse.schedule.findIndex((s) => s.id === sid);
+  selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
+  selectedNurse.schedule.push(newSchedule);
+  console.log(newSchedule, selectedNurse.schedule);
+  return {
+    ...state,
+    selectedNurse
+  };
+}
+
+function addNurseAppointment(state, action) {
+  console.log(action);
+  const {selectedNurse} = state;
+  selectedNurse.schedule.push(action.schedule);
+  return {
+    ...state,
+    selectedNurse
   };
 }
 export function reducer(state: NurseState | undefined, action: Action) {
