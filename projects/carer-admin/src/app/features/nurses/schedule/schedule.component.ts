@@ -37,7 +37,8 @@ export class ScheduleComponent implements OnInit {
     console.log(schedule);
   }
 
-  onAppointmentDeleted(schedule: Schedule) {
-    console.log(schedule);
+  onAppointmentDeleted(scheduleId: string) {
+    console.log(scheduleId);
+    this.store.dispatch(NurseActions.deleteNurseAppointment({scheduleId, nurseId: this.id}));
   }
 }

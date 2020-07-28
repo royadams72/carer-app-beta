@@ -60,10 +60,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
   constructor() { }
   appointmentUpdated($event) {
     // Appointment updated
-    const {originalData: appointment, originalData : {end: endDateStr, start: startDateStr }} = $event.args.appointment;
-    // const appointment = this.getAppointment($event);
-    appointment.end = endDateStr.toISOString();
-    appointment.start = startDateStr.toISOString();
+    const appointment = this.getAppointment($event);
     this.updatedAppointment.emit(appointment);
   }
 
@@ -72,11 +69,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
   }
 
   appointmentAdded($event) {
-    // console.log($event.args.appointment.originalData.end, $event.args.appointment);
-    const {originalData: appointment, originalData : {end: endDateStr, start: startDateStr }} = $event.args.appointment;
-    // const appointment = $event.args.appointment.originalData;
-    appointment.end = endDateStr.toISOString();
-    appointment.start = startDateStr.toISOString();
+    const appointment = this.getAppointment($event);
     this.addedAppointment.emit(appointment);
   }
 
@@ -85,12 +78,16 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.source.localData = this.appointments;
-    this.scheduler.ensureAppointmentVisible('12345');
+    // this.scheduler.ensureAppointmentVisible('12345');
     this.dataAdapter = new jqx.dataAdapter(this.source);
   }
 
+
   getAppointment(event: any): Schedule {
-    const appointmentsArray = this.scheduler.getDataAppointments();
-    return appointmentsArray.find((app) => app.id === event.args.appointment.id);
+    const {originalData: appointment, originalData : {end: endDateStr, start: startDateStr }} = event.args.appointment;
+    // const appointment = $event.args.appointment.originalData;
+    appointment.end = endDateStr.toISOString();
+    appointment.start = startDateStr.toISOString();
+    return appointment;
   }
 }

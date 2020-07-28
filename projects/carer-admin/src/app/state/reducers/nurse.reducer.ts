@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Nurse } from '../../shared/models/nurse.model';
+import { Nurse, Schedule } from '../../shared/models/nurse.model';
 
 import { NurseActions } from '../actions/';
 import { updateNurse } from '../actions/nurse.actions';
@@ -24,6 +24,7 @@ const nurseReducer = createReducer(
   on(NurseActions.updateNurse, update),
   on(NurseActions.addNurseAppointment, addNurseAppointment),
   on(NurseActions.updateNurseAppointment, updateNurseAppointment),
+  on(NurseActions.deleteNurseAppointment, deleteNurseAppointment)
 );
 
 function update(state, action) {
@@ -35,26 +36,45 @@ function update(state, action) {
 
 function updateNurseAppointment(state, action) {
   const {selectedNurse}: {selectedNurse: Nurse} = state;
-  console.log(selectedNurse);
-  const { schedule: newSchedule, schedule: {id: sid}, id} = action;
-  const scheduleToRemoveIndex = selectedNurse.schedule.findIndex((s) => s.id === sid);
-  selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
-  selectedNurse.schedule.push(newSchedule);
-  console.log(newSchedule, selectedNurse.schedule);
-  return {
-    ...state,
-    selectedNurse
-  };
+  const { schedule: updatedSchedule, id} = action;
+  const scheduleToRemoveIndex = updatedSchedule ?
+  selectedNurse.schedule.findIndex((s: Schedule) => s.id === updatedSchedule.id) : undefined;
+
+  if (scheduleToRemoveIndex  !== undefined) {
+    selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
+    selectedNurse.schedule.push(updatedSchedule);
+    return {
+      ...state,
+      selectedNurse
+    };
+  }
+
 }
 
 function addNurseAppointment(state, action) {
-  console.log(action);
   const {selectedNurse} = state;
   selectedNurse.schedule.push(action.schedule);
   return {
     ...state,
     selectedNurse
   };
+}
+
+function deleteNurseAppointment(state, action) {
+  const {selectedNurse}: {selectedNurse: Nurse} = state;
+  const {scheduleId} = action;
+  const scheduleToRemoveIndex = scheduleId  ?
+  selectedNurse.schedule.findIndex((s: Schedule) => s.id === scheduleId ) : undefined;
+
+  if (scheduleToRemoveIndex !== undefined) {
+
+    selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
+    return {
+      ...state,
+      selectedNurse
+    };
+  }
+
 }
 export function reducer(state: NurseState | undefined, action: Action) {
   return nurseReducer(state, action);

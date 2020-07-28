@@ -38,7 +38,7 @@ export const nurseAppointmentAdded = createAction(
 );
 
 export const updateNurseAppointment = createAction(
-  '[NurseState] uding Appointment', props<{id: string, schedule: Schedule}>()
+  '[NurseState] Updating Appointment', props<{id: string, schedule: Schedule}>()
 );
 
 export const appointmentUpdated = createAction(
@@ -46,14 +46,14 @@ export const appointmentUpdated = createAction(
 );
 
 export const deleteNurseAppointment = createAction(
-  '[NurseState] deleting Appointment', props<{id: string}>()
+  '[NurseState] deleting Appointment', props<{scheduleId: string, nurseId: string}>()
 );
 
-export const AppointmentUdeleted = createAction(
+export const appointmentDeleted = createAction(
   '[NurseState] Appointment deleted'
 );
 
 export type NurseActionsUnion = ReturnType<typeof loadNurses | typeof loadNursesComplete |
             typeof getNurse | typeof getNurseLoaded | typeof addNurse | typeof updateNurse | typeof nurseUpdated |
             typeof addNurseAppointment | typeof nurseAppointmentAdded | typeof updateNurseAppointment | typeof appointmentUpdated |
-            typeof deleteNurseAppointment | typeof AppointmentUdeleted>;
+            typeof deleteNurseAppointment | typeof appointmentDeleted>;
