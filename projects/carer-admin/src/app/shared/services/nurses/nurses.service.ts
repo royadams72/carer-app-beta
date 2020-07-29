@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { firestore, database } from 'firebase/app';
 import { Nurse, Schedule, ScheduleData } from '../../models/nurse.model';
 import { map, mergeMap, take, switchMap, catchError } from 'rxjs/operators';
-import { Observable, of, from, forkJoin } from 'rxjs';
+import { Observable, of, from, forkJoin, throwError } from 'rxjs';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
@@ -26,7 +26,6 @@ export class NursesService {
 }
 
 getAllNurses(): Observable<any> {
-//  console.log('getNurse');
  return this.itemsCollection.snapshotChanges()
  .pipe(map(actions => {
     return actions.map(a => {
@@ -40,7 +39,6 @@ getAllNurses(): Observable<any> {
 
 getNurse(nurseId: string): Observable<Nurse> {
   this.document = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
-  console.log(this.itemsCollection)
   return this.document.snapshotChanges()
   .pipe(
     map(changes => {
@@ -71,7 +69,6 @@ updateNurse(nurse: Nurse): Observable<any> {
   }
 
   deleteNurseAppointment(appointment: Schedule, nurseId: string) {
-    console.log(appointment);
     this.document = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
     return this.appointmentHandler(appointment, false);
   }
@@ -88,11 +85,10 @@ updateNurse(nurse: Nurse): Observable<any> {
             return of({});
           }
         }),
-        catchError(error => {console.log(error); return of(error); }));
+        catchError(error => {console.log(error); return throwError(error); }));
   }
 
   private addAppointment(appointment: Schedule) {
-    console.log(appointment);
     if (!appointment) { return; }
     return from(this.document.update({ schedule: firestore.FieldValue.arrayUnion(appointment)}));
   }

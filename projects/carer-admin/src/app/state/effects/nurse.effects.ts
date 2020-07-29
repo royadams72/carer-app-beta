@@ -51,7 +51,7 @@ export class NurseEffects {
         map(() => NurseActions.appointmentUpdated()),
         catchError(error => {console.log('2= ', error); return of(error); })
         );
-    })
+    }), catchError(error => {console.log('2= ', error); return of(error); })
   ));
 
   deleteNurseAppointment$ = createEffect(()  =>  this.actions$.pipe(
@@ -61,7 +61,7 @@ export class NurseEffects {
         map(() => NurseActions.appointmentDeleted()),
         catchError(error => {console.log('2= ', error); return of(error); })
         );
-    })
+    }), catchError(error => {console.log('2= ', error); return of(error); })
   ));
 
   constructor(

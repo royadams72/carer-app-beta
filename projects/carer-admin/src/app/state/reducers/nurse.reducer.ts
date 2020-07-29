@@ -27,28 +27,11 @@ const nurseReducer = createReducer(
   on(NurseActions.deleteNurseAppointment, deleteNurseAppointment)
 );
 
-function update(state, action) {
+function update(state: NurseState, action) {
   return {
     ...state,
     selectedNurse: action.nurse
   };
-}
-
-function updateNurseAppointment(state, action) {
-  const {selectedNurse}: {selectedNurse: Nurse} = state;
-  const { schedule: updatedSchedule, id} = action;
-  const scheduleToRemoveIndex = updatedSchedule ?
-  selectedNurse.schedule.findIndex((s: Schedule) => s.id === updatedSchedule.id) : undefined;
-
-  if (scheduleToRemoveIndex  !== undefined) {
-    selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
-    selectedNurse.schedule.push(updatedSchedule);
-    return {
-      ...state,
-      selectedNurse
-    };
-  }
-
 }
 
 function addNurseAppointment(state, action) {
@@ -60,21 +43,30 @@ function addNurseAppointment(state, action) {
   };
 }
 
+function updateNurseAppointment(state: any, action) {
+  return handleAppointment(state, action, true);
+}
+
 function deleteNurseAppointment(state, action) {
+  return handleAppointment(state, action, false);
+}
+
+function handleAppointment(state: NurseState, action: any, isAdding: boolean) {
   const {selectedNurse}: {selectedNurse: Nurse} = state;
   const { schedule: updatedSchedule, id} = action;
   const scheduleToRemoveIndex = updatedSchedule ?
   selectedNurse.schedule.findIndex((s: Schedule) => s.id === updatedSchedule.id) : undefined;
 
-  if (scheduleToRemoveIndex !== undefined) {
+  if (scheduleToRemoveIndex  !== undefined) {
     selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
+    if (isAdding) { selectedNurse.schedule.push(updatedSchedule); }
     return {
       ...state,
       selectedNurse
     };
   }
-}
 
+}
 export function reducer(state: NurseState | undefined, action: Action) {
   return nurseReducer(state, action);
 }
