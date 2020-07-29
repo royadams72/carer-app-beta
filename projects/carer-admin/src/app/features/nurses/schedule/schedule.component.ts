@@ -25,20 +25,16 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.nurseSchedule$.subscribe((data => { if (data) { this.appointments = data; } }));
     this.nurseId$.subscribe((data => {if (data) { this.id = data; }}));
-    // console.log(this.appointments);
   }
   onAppointmentUpdated(schedule: Schedule) {
-    this.store.dispatch(NurseActions.updateNurseAppointment({id: this.id, schedule}));
-    console.log(schedule);
+    this.store.dispatch(NurseActions.updateNurseAppointment({nurseId: this.id, schedule}));
   }
 
   onAppointmentAdded(schedule: Schedule) {
     this.store.dispatch(NurseActions.addNurseAppointment({id: this.id, schedule}));
-    console.log(schedule);
   }
 
-  onAppointmentDeleted(scheduleId: string) {
-    console.log(scheduleId);
-    this.store.dispatch(NurseActions.deleteNurseAppointment({scheduleId, nurseId: this.id}));
+  onAppointmentDeleted(schedule: Schedule) {
+    this.store.dispatch(NurseActions.deleteNurseAppointment({nurseId: this.id, schedule}));
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
 import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
+import { of, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-scheduler',
@@ -61,11 +62,14 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
   appointmentUpdated($event) {
     // Appointment updated
     const appointment = this.getAppointment($event);
+    console.log(appointment);
     this.updatedAppointment.emit(appointment);
   }
 
   appointmentDeleted($event) {
-    this.deletedAppointment.emit($event.args.appointment.originalData.id);
+    console.log($event);
+    const appointment = this.getAppointment($event);
+    this.deletedAppointment.emit(appointment);
   }
 
   appointmentAdded($event) {
@@ -78,16 +82,15 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.source.localData = this.appointments;
-    // this.scheduler.ensureAppointmentVisible('12345');
     this.dataAdapter = new jqx.dataAdapter(this.source);
   }
 
 
   getAppointment(event: any): Schedule {
-    const {originalData: appointment, originalData : {end: endDateStr, start: startDateStr }} = event.args.appointment;
-    // const appointment = $event.args.appointment.originalData;
-    appointment.end = endDateStr.toISOString();
-    appointment.start = startDateStr.toISOString();
-    return appointment;
+      const {originalData: appointment, originalData : {end, start,  recurrenceRule}} = event.args.appointment;
+      appointment.end = (typeof end) !== 'string' ? end.toISOString() : appointment.end;
+      appointment.start = (typeof start) !== 'string' ? start.toISOString() : appointment.start;
+      appointment.recurrenceRule = recurrenceRule ? recurrenceRule.toString() : null;
+      return appointment;
   }
 }

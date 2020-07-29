@@ -62,20 +62,19 @@ function addNurseAppointment(state, action) {
 
 function deleteNurseAppointment(state, action) {
   const {selectedNurse}: {selectedNurse: Nurse} = state;
-  const {scheduleId} = action;
-  const scheduleToRemoveIndex = scheduleId  ?
-  selectedNurse.schedule.findIndex((s: Schedule) => s.id === scheduleId ) : undefined;
+  const { schedule: updatedSchedule, id} = action;
+  const scheduleToRemoveIndex = updatedSchedule ?
+  selectedNurse.schedule.findIndex((s: Schedule) => s.id === updatedSchedule.id) : undefined;
 
   if (scheduleToRemoveIndex !== undefined) {
-
     selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
     return {
       ...state,
       selectedNurse
     };
   }
-
 }
+
 export function reducer(state: NurseState | undefined, action: Action) {
   return nurseReducer(state, action);
 }

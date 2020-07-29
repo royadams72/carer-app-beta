@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
 import { NurseActions } from '../actions/';
-import { switchMap, map, mergeMap } from 'rxjs/operators';
+import { switchMap, map, mergeMap, catchError } from 'rxjs/operators';
 
 import { NursesService } from '../../shared/services/nurses/nurses.service';
+import { of } from 'rxjs';
 @Injectable()
 export class NurseEffects {
 
@@ -46,17 +47,19 @@ export class NurseEffects {
   updateNurseAppointment$ = createEffect(()  => this.actions$.pipe(
     ofType<any>(NurseActions.updateNurseAppointment),
     switchMap((action) => {
-      return this.nursesService.updateNurseAppointment(action.id, action.schedule).pipe(
-        map(() => NurseActions.appointmentUpdated())
+      return this.nursesService.updateNurseAppointment(action.schedule, action.nurseId).pipe(
+        map(() => NurseActions.appointmentUpdated()),
+        catchError(error => {console.log('2= ', error); return of(error); })
         );
     })
   ));
 
-  deleteNurseAppointment$ = createEffect(()  => this.actions$.pipe(
+  deleteNurseAppointment$ = createEffect(()  =>  this.actions$.pipe(
     ofType<any>(NurseActions.deleteNurseAppointment),
     switchMap((action) => {
-      return this.nursesService.deleteNurseAppointment(action.scheduleId, action.nurseId).pipe(
-        map(() => NurseActions.appointmentDeleted())
+      return this.nursesService.deleteNurseAppointment(action.schedule, action.nurseId).pipe(
+        map(() => NurseActions.appointmentDeleted()),
+        catchError(error => {console.log('2= ', error); return of(error); })
         );
     })
   ));

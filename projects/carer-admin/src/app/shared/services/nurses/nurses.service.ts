@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { firestore, database } from 'firebase/app';
 import { Nurse, Schedule, ScheduleData } from '../../models/nurse.model';
-import { map, mergeMap, take, switchMap } from 'rxjs/operators';
+import { map, mergeMap, take, switchMap, catchError } from 'rxjs/operators';
 import { Observable, of, from, forkJoin } from 'rxjs';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
@@ -40,6 +40,7 @@ getAllNurses(): Observable<any> {
 
 getNurse(nurseId: string): Observable<Nurse> {
   this.document = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
+  console.log(this.itemsCollection)
   return this.document.snapshotChanges()
   .pipe(
     map(changes => {
@@ -64,33 +65,41 @@ updateNurse(nurse: Nurse): Observable<any> {
      return this.addAppointment(appointment);
   }
 
-  updateNurseAppointment(id: string, appointment: Schedule) {
-    this.document = this.angularFireStore.doc<Nurse>(`nurses/${id}`);
-    this.findAppointment(appointment.id)
-    .subscribe((data) => this.deleteAppointment(data));
-    return this.addAppointment(appointment);
-  }
-
-  deleteNurseAppointment(appointmentId: string, nurseId: string) {
+  updateNurseAppointment(appointment: Schedule, nurseId: string) {
     this.document = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
-    console.log(appointmentId, nurseId);
-    this.findAppointment(appointmentId).subscribe((data) => this.deleteAppointment(data));
-    return of({});
+    return this.appointmentHandler(appointment);
   }
 
-  private findAppointment(appointmentId: string) {
-    if (!appointmentId) { return; }
+  deleteNurseAppointment(appointment: Schedule, nurseId: string) {
+    console.log(appointment);
+    this.document = this.angularFireStore.doc<Nurse>(`nurses/${nurseId}`);
+    return this.appointmentHandler(appointment, false);
+  }
+
+  private appointmentHandler(appointment: Schedule, isAdding: boolean = true) {
+    if (!appointment) { return; }
     return this.document.valueChanges()
-      .pipe(take(1), map(nurse => nurse.schedule.find((appointment: Schedule) => appointment.id === appointmentId)));
+      .pipe(take(1), map(nurse => nurse.schedule.find((a: Schedule) => a.id === appointment.id)),
+        switchMap((data: Schedule) => this.deleteAppointment(data)),
+        switchMap(() => {
+          if (isAdding) {
+            return this.addAppointment(appointment);
+          } else {
+            return of({});
+          }
+        }),
+        catchError(error => {console.log(error); return of(error); }));
   }
 
   private addAppointment(appointment: Schedule) {
+    console.log(appointment);
     if (!appointment) { return; }
     return from(this.document.update({ schedule: firestore.FieldValue.arrayUnion(appointment)}));
   }
 
   private deleteAppointment(appointment: Schedule) {
     if (!appointment) { return; }
-    return from(this.document.update({ schedule: firestore.FieldValue.arrayRemove(appointment)}));
+    return from(this.document.update({ schedule: firestore.FieldValue.arrayRemove(appointment)}))
+    .pipe(catchError(error => {console.log(error); return of(error); }));
   }
 }
