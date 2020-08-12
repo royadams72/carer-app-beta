@@ -16,8 +16,6 @@ import { NavigationComponent } from './shared/components/navigation/navigation.c
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './core/modules/material-module';
 import { FormService } from './shared/services/forms/form.service';
-
-
 @NgModule({
   declarations: [
     AppComponent,

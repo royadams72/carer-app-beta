@@ -5,6 +5,7 @@ import { getSelectedNurseId, getSchedule } from 'carer-admin/src/app/state/selec
 import { Observable } from 'rxjs';
 import { Nurse, Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
 import { NurseActions } from 'carer-admin/src/app/state/actions';
+import { scheduler } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
 
 @Component({
   selector: 'app-schedule',
@@ -16,6 +17,7 @@ export class ScheduleComponent implements OnInit {
   nurseSchedule$: Observable<Schedule[]>;
   appointments = [];
   id: string;
+  schedulerConfig = scheduler;
 
   constructor(private store: Store<State>) {
     this.nurseId$ = this.store.select(getSelectedNurseId);

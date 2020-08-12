@@ -7,9 +7,10 @@ import { TextFieldComponent } from './form-controls/text-field/text-field';
 import { DatePickerComponent } from './form-controls/date-picker/date-picker';
 import { SelectComponent } from './form-controls/select/select';
 import { SchedulerComponent } from './form-controls/scheduler/scheduler.component';
-import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
-
-
+import { jqxInputModule } from 'jqwidgets-ng/jqxinput';
+import { jqxSchedulerModule } from 'jqwidgets-ng/jqxscheduler';
+import { jqxInputComponent } from 'jqwidgets-ng/jqxinput';
+import { JqxDomService } from '../../services/forms/jqwidgets-dom.service';
 const routes: Routes = [
 ];
 
@@ -19,9 +20,13 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    RouterModule.forChild(routes)
+    jqxSchedulerModule,
+    RouterModule.forChild(routes),
+    jqxInputModule
   ],
-  declarations: [TextFieldComponent, DatePickerComponent, SelectComponent, SchedulerComponent, jqxSchedulerComponent],
+  providers: [JqxDomService],
+  declarations: [TextFieldComponent, DatePickerComponent, SelectComponent, SchedulerComponent],
+  entryComponents: [jqxInputComponent],
   exports: [TextFieldComponent, DatePickerComponent, SelectComponent, SchedulerComponent]
 })
 export class CustomFormModule {}

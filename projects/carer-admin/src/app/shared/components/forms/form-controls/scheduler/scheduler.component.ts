@@ -1,7 +1,6 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter, Renderer2 } from '@angular/core';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
 import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
-import { of, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-scheduler',
@@ -12,85 +11,90 @@ import { of, Observable } from 'rxjs';
 export class SchedulerComponent implements OnInit, AfterViewInit {
   @ViewChild('schedulerReference', {static: false}) scheduler: jqxSchedulerComponent;
   @Input() appointments: Array<Schedule>;
+  @Input() config: any;
   @Output() updatedAppointment: EventEmitter<any> = new EventEmitter();
   @Output() deletedAppointment: EventEmitter<any> = new EventEmitter();
   @Output() addedAppointment: EventEmitter<any> = new EventEmitter();
+  dataAdapter: jqxSchedulerComponent;
+  date = new jqx.date(new Date());
+  clientInputComponent;
+  countries: string[] =
+  new Array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antarctica', 'Antigua and Barbuda', 'Argentina');
 
-  source: any = {
-    dataType: 'array',
-    dataFields: [
-        { name: 'id', type: 'string' },
-        { name: 'description', type: 'string' },
-        { name: 'location', type: 'string' },
-        { name: 'subject', type: 'string' },
-        { name: 'calendar', type: 'string' },
-        { name: 'recurrenceRule', type: 'string' },
-        { name: 'start', type: 'date' },
-        { name: 'end', type: 'date' }
-    ],
-    id: 'id',
-    localData: this.appointments
-};
-
-  dataAdapter = new jqx.dataAdapter(this.source);
-  // date: any = new jqx.date(new Date());
-
-  appointmentDataFields: any = {
-    from: 'start',
-    to: 'end',
-    id: 'id',
-    description: 'description',
-    location: 'location',
-    recurrencePattern: 'recurrenceRule',
-    subject: 'subject',
-    resourceId: 'calendar'
-  };
-
-  resources: any =  {
-    colorScheme: 'scheme05',
-    dataField: 'calendar',
-    source: new jqx.dataAdapter(this.source)
-};
-
-  views: any[] =
-  [
-      'dayView',
-      'weekView',
-      'monthView'
-  ];
-  constructor() { }
+  constructor(private renderer: Renderer2) {  }
   appointmentUpdated($event) {
     // Appointment updated
     const appointment = this.getAppointment($event);
-    console.log(appointment);
+    // console.log(appointment);
     this.updatedAppointment.emit(appointment);
   }
 
   appointmentDeleted($event) {
-    console.log($event);
+
     const appointment = this.getAppointment($event);
     this.deletedAppointment.emit(appointment);
   }
 
   appointmentAdded($event) {
     const appointment = this.getAppointment($event);
-    this.addedAppointment.emit(appointment);
+    // this.addedAppointment.emit(appointment);
   }
 
   ngOnInit() {
+
+  }
+
+
+  editDialogCreate = (dialog, fields, editAppointment) => {
+    console.log(this.clientInputComponent);
+    if (fields) {
+        fields.statusContainer.hide();
+        fields.timeZoneContainer.hide();
+        fields.resourceContainer.hide();
+        fields.subjectLabel.html('Client');
+        console.log(this.clientInputComponent);
+        setTimeout(() => {
+        this.clientInputComponent =  jqwidgets.createInstance(`#${fields.subject[0].id}`, 'jqxInput', {
+          placeHolder: 'Enter a Client',
+          width: 200,
+          height: 25,
+          source: this.countries
+        });
+        console.log(this.clientInputComponent, `#${fields.subject[0].id}_popup`);
+        this.clientInputComponent.addEventHandler('open', () => {
+            document.getElementById(`${fields.subject[0].id}_popup`).style.zIndex = '1005';
+        });
+        });
+    }
+  }
+  editDialogClose = (dialog, fields, editAppointment) => {
+    if (fields) {
+    // this.clientInputComponent.val(null);
+
+    }
   }
 
   ngAfterViewInit(): void {
-    this.source.localData = this.appointments;
-    this.dataAdapter = new jqx.dataAdapter(this.source);
+    this.config.source.localData = this.appointments;
+    this.config.resources.source = new jqx.dataAdapter(this.config.source);
+    // this.source.localData = this.appointments;
+    // this.dataAdapter = new jqx.dataAdapter(this.source);
+    this.dataAdapter = new jqx.dataAdapter(this.config.source);
+    console.log(this.scheduler);
   }
 
 
   getAppointment(event: any): Schedule {
-      const {originalData: appointment, originalData : {end, start,  recurrenceRule}} = event.args.appointment;
+      console.log(event);
+      const {originalData: appointment, originalData : {end, start,  recurrenceRule, subject}} = event.args.appointment;
+      appointment.calendar = subject;
       appointment.end = (typeof end) !== 'string' ? end.toISOString() : appointment.end;
       appointment.start = (typeof start) !== 'string' ? start.toISOString() : appointment.start;
       appointment.recurrenceRule = recurrenceRule ? recurrenceRule.toString() : null;
       return appointment;
+  }
+
+  clearValues(): void {
+
   }
 }

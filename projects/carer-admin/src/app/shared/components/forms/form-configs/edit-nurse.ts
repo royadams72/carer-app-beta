@@ -179,3 +179,48 @@ export const editNurseForm = {
             controlType: ControlType.Option
         }
 };
+
+
+export const scheduler = {
+    source: {
+        dataType: 'array',
+        dataFields: [
+            { name: 'id', type: 'string' },
+            { name: 'description', type: 'string' },
+            { name: 'location', type: 'string' },
+            { name: 'subject', type: 'string' },
+            { name: 'calendar', type: 'string' },
+            { name: 'recurrenceRule', type: 'string' },
+            { name: 'start', type: 'date' },
+            { name: 'end', type: 'date' }
+        ],
+        id: 'id',
+        localData: null
+    },
+    timezone: 'GMT Standard Time',
+      // dataAdapter = new jqx.dataAdapter(this.source);
+      // date: any = new jqx.date(new Date());
+
+      appointmentDataFields: {
+        from: 'start',
+        to: 'end',
+        id: 'id',
+        description: 'description',
+        location: 'location',
+        recurrencePattern: 'recurrenceRule',
+        subject: 'subject',
+        resourceId: 'calendar'
+      },
+
+      resources: {
+        colorScheme: 'scheme05',
+        dataField: 'calendar',
+        source: null
+    },
+
+      views: [
+          'dayView',
+          'weekView',
+          'monthView'
+        ],
+};

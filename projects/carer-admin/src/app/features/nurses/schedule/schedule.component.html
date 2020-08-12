@@ -2,4 +2,5 @@
 <app-scheduler [appointments]="appointments"
 (updatedAppointment)="onAppointmentUpdated($event)"
 (addedAppointment)="onAppointmentAdded($event)"
-(deletedAppointment)="onAppointmentDeleted($event)"></app-scheduler>
+(deletedAppointment)="onAppointmentDeleted($event)"
+[config]="schedulerConfig"></app-scheduler>

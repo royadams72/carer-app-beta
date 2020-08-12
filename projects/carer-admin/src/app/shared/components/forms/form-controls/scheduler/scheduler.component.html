@@ -1,7 +1,16 @@
+<!-- <jqxInput
+    [width]="200" [height]="25" [source]="countries"
+    [minLength]="1" [placeHolder]="'Enter a Country'" #myInput>
+</jqxInput> -->
+
 <jqxScheduler #schedulerReference
-[date]="date" [width]="800" [height]="600" [source]="dataAdapter" [showLegend]="true" [view]="'monthView'"
-[appointmentDataFields]="appointmentDataFields" [resources]="resources" [views]="views"
+[width]="800" [height]="600" [source]="dataAdapter" [showLegend]="true" [view]="'monthView'"
+[appointmentDataFields]="config.appointmentDataFields" [resources]="config.resources" [views]="config.views"
+[timeZone]="config.timezone"
+[editDialogClose]="editDialogClose"
+[editDialogCreate]="editDialogCreate"
 (onAppointmentChange)="appointmentUpdated($event)"
 (onAppointmentDelete)="appointmentDeleted($event)"
 (onAppointmentAdd)="appointmentAdded($event)">
-</jqxScheduler>`
+</jqxScheduler>
+<!-- [date]="date"  -->
