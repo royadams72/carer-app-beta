@@ -4,11 +4,12 @@
 </jqxInput> -->
 
 <jqxScheduler #schedulerReference
-[width]="800" [height]="600" [source]="dataAdapter" [showLegend]="true" [view]="'monthView'"
+[width]="800" [height]="600" [source]="dataAdapter" [showLegend]="config.showLegend" [view]="'monthView'"
 [appointmentDataFields]="config.appointmentDataFields" [resources]="config.resources" [views]="config.views"
 [timeZone]="config.timezone"
+[editDialogDateTimeFormatString]="config.editDialogDateTimeFormatString"
 [editDialogClose]="editDialogClose"
-[editDialogCreate]="editDialogCreate"
+[editDialogOpen]="editDialogOpen"
 (onAppointmentChange)="appointmentUpdated($event)"
 (onAppointmentDelete)="appointmentDeleted($event)"
 (onAppointmentAdd)="appointmentAdded($event)">

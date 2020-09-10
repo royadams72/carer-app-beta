@@ -197,9 +197,11 @@ export const scheduler = {
         id: 'id',
         localData: null
     },
+
     timezone: 'GMT Standard Time',
-      // dataAdapter = new jqx.dataAdapter(this.source);
-      // date: any = new jqx.date(new Date());
+    showLegend: true,
+    showToolbar: true,
+    editDialogDateTimeFormatString: 'dd/MM/yyyy hh:mm tt',
 
       appointmentDataFields: {
         from: 'start',
