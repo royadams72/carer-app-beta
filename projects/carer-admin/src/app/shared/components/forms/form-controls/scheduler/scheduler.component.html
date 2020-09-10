@@ -1,0 +1,17 @@
+<!-- <jqxInput
+    [width]="200" [height]="25" [source]="countries"
+    [minLength]="1" [placeHolder]="'Enter a Country'" #myInput>
+</jqxInput> -->
+
+<jqxScheduler #schedulerReference
+[width]="800" [height]="600" [source]="dataAdapter" [showLegend]="config.showLegend" [view]="'monthView'"
+[appointmentDataFields]="config.appointmentDataFields" [resources]="config.resources" [views]="config.views"
+[timeZone]="config.timezone"
+[editDialogDateTimeFormatString]="config.editDialogDateTimeFormatString"
+[editDialogClose]="editDialogClose"
+[editDialogOpen]="editDialogOpen"
+(onAppointmentChange)="appointmentUpdated($event)"
+(onAppointmentDelete)="appointmentDeleted($event)"
+(onAppointmentAdd)="appointmentAdded($event)">
+</jqxScheduler>
+<!-- [date]="date"  -->

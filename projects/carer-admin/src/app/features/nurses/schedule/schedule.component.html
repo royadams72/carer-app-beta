@@ -1,0 +1,6 @@
+<p>schedule works!</p>
+<app-scheduler [appointments]="appointments"
+(updatedAppointment)="onAppointmentUpdated($event)"
+(addedAppointment)="onAppointmentAdded($event)"
+(deletedAppointment)="onAppointmentDeleted($event)"
+[config]="schedulerConfig"></app-scheduler>

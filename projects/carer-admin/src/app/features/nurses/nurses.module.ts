@@ -2,13 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { NursesComponent } from './nurses.component';
 import { ViewNurseComponent } from './view-nurse/view-nurse.component';
 import { EditNurseComponent } from './edit-nurse/edit-nurse.component';
 import { MaterialModule } from '../../core/modules/material-module';
 import { CustomFormModule } from '../../shared/components/forms/form.module';
-
+import { ScheduleComponent } from './schedule/schedule.component';
 
 const routes: Routes = [
   {
@@ -20,9 +19,13 @@ const routes: Routes = [
     component: ViewNurseComponent
   },
   {
-    path: 'edit-nurse/:id',
+    path: 'edit-nurse',
     component: EditNurseComponent
-  }
+  },
+  {
+    path: 'nurse-schedule',
+    component: ScheduleComponent
+  },
 ];
 
 @NgModule({
@@ -34,6 +37,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CustomFormModule
   ],
-  declarations: [NursesComponent, ViewNurseComponent, EditNurseComponent]
+  declarations: [NursesComponent, ViewNurseComponent, EditNurseComponent, ScheduleComponent]
 })
 export class NursesModule {}

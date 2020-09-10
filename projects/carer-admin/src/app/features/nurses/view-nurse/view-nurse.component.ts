@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from '../../../state/reducers';
-import {  nurseSelected } from '../../../state/selectors';
+import {  getSelectedNurse } from '../../../state/selectors';
 import { NursesService } from 'carer-admin/src/app/shared/services/nurses/nurses.service';
 import { NurseActions } from 'carer-admin/src/app/state/actions';
 import { Nurse } from 'carer-admin/src/app/shared/models/nurse.model';
@@ -22,7 +22,7 @@ selectedNurse$: Observable<Nurse>;
                }
 
   ngOnInit() {
-    this.selectedNurse$ = this.store.select(nurseSelected);
+    this.selectedNurse$ = this.store.select(getSelectedNurse);
   }
 
 }

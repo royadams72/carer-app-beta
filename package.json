@@ -7,7 +7,10 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "start-server": "http-server",
+    "run-prod-local": "cd dist/carer-admin"
+
   },
   "private": true,
   "dependencies": {
@@ -28,6 +31,7 @@
     "effects": "0.0.5",
     "firebase": "^7.0.0",
     "hammerjs": "^2.0.8",
+    "ngrx-store-localstorage": "^9.0.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
