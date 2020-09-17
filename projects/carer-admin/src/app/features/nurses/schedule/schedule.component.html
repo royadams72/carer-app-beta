@@ -1,5 +1,5 @@
-<p>schedule works!</p>
-<app-scheduler [appointments]="appointments"
+
+<app-scheduler [appointments]="nurseSchedule$ | async"
 (updatedAppointment)="onAppointmentUpdated($event)"
 (addedAppointment)="onAppointmentAdded($event)"
 (deletedAppointment)="onAppointmentDeleted($event)"

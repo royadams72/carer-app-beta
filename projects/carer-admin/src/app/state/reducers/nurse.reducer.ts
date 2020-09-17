@@ -35,38 +35,30 @@ function update(state: NurseState, action) {
 }
 
 function addNurseAppointment(state, action) {
-  const {selectedNurse} = state;
-  selectedNurse.schedule.push(action.schedule);
   return {
     ...state,
-    selectedNurse
+    selectedNurse: { ...state.selectedNurse, schedule: [...state.selectedNurse.schedule, action.schedule]}
   };
 }
 
 function updateNurseAppointment(state: any, action) {
-  return handleAppointment(state, action, true);
+  return {
+    ...state,
+    selectedNurse: {
+      ...state.selectedNurse,
+      schedule: [...state.selectedNurse.schedule.filter(s => s.id !== action.schedule.id), action.schedule]
+    }
+  };
 }
 
 function deleteNurseAppointment(state, action) {
-  return handleAppointment(state, action, false);
+  return {
+    ...state,
+    selectedNurse: { ...state.selectedNurse, schedule: [...state.selectedNurse.schedule.filter(s => s.id !== action.schedule.id)] }
+  };
 }
 
-function handleAppointment(state: NurseState, action: any, isAdding: boolean) {
-  const {selectedNurse}: {selectedNurse: Nurse} = state;
-  const { schedule: updatedSchedule, id} = action;
-  const scheduleToRemoveIndex = updatedSchedule ?
-  selectedNurse.schedule.findIndex((s: Schedule) => s.id === updatedSchedule.id) : undefined;
 
-  if (scheduleToRemoveIndex  !== undefined) {
-    selectedNurse.schedule.splice(scheduleToRemoveIndex, 1);
-    if (isAdding) { selectedNurse.schedule.push(updatedSchedule); }
-    return {
-      ...state,
-      selectedNurse
-    };
-  }
-
-}
 export function reducer(state: NurseState | undefined, action: Action) {
   return nurseReducer(state, action);
 }
