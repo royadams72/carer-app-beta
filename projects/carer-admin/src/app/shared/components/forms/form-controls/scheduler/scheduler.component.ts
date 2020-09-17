@@ -1,15 +1,14 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter, Renderer2, OnChanges, SimpleChanges} from '@angular/core';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
 import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
-import { jqxButtonComponent } from 'jqwidgets-ng/jqxbuttons';
-import { DOCUMENT } from '@angular/common';
 @Component({
   selector: 'app-scheduler',
   templateUrl: './scheduler.component.html',
-  styleUrls: ['./scheduler.component.scss']
+  styleUrls: ['./scheduler.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SchedulerComponent implements OnInit, AfterViewInit {
+export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('schedulerReference', {static: false}) scheduler: jqxSchedulerComponent;
   @Input() appointments: Array<Schedule>;
   @Input() config: any;
@@ -62,7 +61,6 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
         if (!editAppointment) {
           this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
         }
-        console.log(fields);
         this.setUpJqInput(fields.subject[0].id);
         // TODO: need to add validation to make sure the client is not mis spelled and matches DB
         this.addValidation(fields.subject[0].id, fields.subjectContainer[0], 'Please make sure Client is filled in');
@@ -91,7 +89,6 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
       this.renderer.setStyle(err, 'float', 'right');
       this.renderer.setStyle(err, 'display', 'none');
       this.renderer.appendChild(fieldContainer, err);
- 
     } else {
       err = document.getElementById(errDivId);
       this.renderer.setStyle(err, 'display', 'none');
@@ -123,7 +120,6 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
   }
 
   matchAgainstArray(fieldToCheckId, fieldContainer, errorText) {
-
     // index = this.validFields.push(field.value) - 1;
     //  push value o into array and get the i?
     const err = this.setUpErrorDiv(fieldToCheckId, errorText, fieldContainer);
@@ -137,44 +133,42 @@ export class SchedulerComponent implements OnInit, AfterViewInit {
 
 
   }
-setUpErrorDiv(fieldToCheckId, errorText, fieldContainer) {
-  const errDivId = `${fieldToCheckId}_err2`;
-  const errDiv =  document.getElementById(errDivId);
-  let err: any;
-  let text: any;
-  // let index;
-  // Only add error div if it sn't been already
-  if (!errDiv) {
-    err = this.renderer.createElement('div');
-    text = this.renderer.createText(errorText);
-    this.renderer.setAttribute(err, 'id', errDivId);
-    this.renderer.appendChild(err, text);
-    this.renderer.setStyle(err, 'width', '400px');
-    this.renderer.setStyle(err, 'float', 'right');
-    this.renderer.setStyle(err, 'display', 'none');
-    this.renderer.appendChild(fieldContainer, err);
+  setUpErrorDiv(fieldToCheckId, errorText, fieldContainer) {
+    const errDivId = `${fieldToCheckId}_err2`;
+    const errDiv =  document.getElementById(errDivId);
+    let err: any;
+    let text: any;
+    // let index;
+    // Only add error div if it hasn't been already
+    if (!errDiv) {
+      err = this.renderer.createElement('div');
+      text = this.renderer.createText(errorText);
+      this.renderer.setAttribute(err, 'id', errDivId);
+      this.renderer.appendChild(err, text);
+      this.renderer.setStyle(err, 'width', '400px');
+      this.renderer.setStyle(err, 'float', 'right');
+      this.renderer.setStyle(err, 'display', 'none');
+      this.renderer.appendChild(fieldContainer, err);
 
-  } else {
-    err = document.getElementById(errDivId);
-    this.renderer.setStyle(err, 'display', 'none');
+    } else {
+      err = document.getElementById(errDivId);
+      this.renderer.setStyle(err, 'display', 'none');
+    }
+
+    return err;
   }
 
-  return err;
-}
-
-checkAllValidation() {
-  if (!this.isFieldsEmpty() && this.clientMatchFound) {
-    this.renderer.removeAttribute(this.saveButton, 'disabled');
-  } else {
-    this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
+  checkAllValidation() {
+    if (!this.isFieldsEmpty() && this.clientMatchFound) {
+      this.renderer.removeAttribute(this.saveButton, 'disabled');
+    } else {
+      this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
+    }
   }
-  console.log(this.validFields);
-}
 
-isFieldsEmpty() {
-  console.log(this.validFields);
-  return this.validFields.indexOf('') === -1 ? false : true;
-}
+  isFieldsEmpty() {
+    return this.validFields.indexOf('') === -1 ? false : true;
+  }
 
   editDialogClose = (dialog, fields, editAppointment) => {
     if (fields) {
@@ -184,16 +178,21 @@ isFieldsEmpty() {
   }
 
   ngAfterViewInit(): void {
-    this.config.source.localData = this.appointments;
-    this.config.resources.source = new jqx.dataAdapter(this.config.source);
-    this.dataAdapter = new jqx.dataAdapter(this.config.source);
-    this.element = this.scheduler.elementRef.nativeElement.querySelector('.jqx-scheduler-legend-bar-bottom')
-    const legendBar = this.element;
-    this.renderer.removeStyle(legendBar, 'display');
-    // console.log(this.scheduler.elementRef.nativeElement);
-    // console.log(document.querySelector('.jqx-scheduler-legend-bar-bottom'));
+    this.showLegendFix();
   }
 
+  showLegendFix() {
+    // legend hack
+    this.element = this.scheduler.elementRef.nativeElement.querySelector('.jqx-scheduler-legend-bar-bottom');
+    const legendBar = this.element;
+    this.renderer.removeStyle(legendBar, 'display');
+  }
+
+  setUpSchedulerInfo(changes) {
+    this.config.source.localData = changes.appointments.currentValue;
+    this.config.resources.source = new jqx.dataAdapter(this.config.source);
+    this.dataAdapter = new jqx.dataAdapter(this.config.source);
+  }
 
   getAppointment(event: any): Schedule {
       const {originalData: appointment, originalData : {end, start,  recurrenceRule, subject}} = event.args.appointment;
@@ -205,7 +204,8 @@ isFieldsEmpty() {
       return appointment;
   }
 
-  clearValues(): void {
-
+  ngOnChanges(changes: SimpleChanges): void {
+    this.setUpSchedulerInfo(changes);
   }
+
 }

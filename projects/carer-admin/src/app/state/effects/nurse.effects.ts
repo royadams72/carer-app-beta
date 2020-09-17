@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
 import { NurseActions } from '../actions/';
-import { switchMap, map, mergeMap, catchError } from 'rxjs/operators';
+import { switchMap, map, mergeMap, catchError, takeUntil } from 'rxjs/operators';
 
 import { NursesService } from '../../shared/services/nurses/nurses.service';
 import { of } from 'rxjs';
+import { SubscriptionService } from '../../shared/services/core/subscription.service';
 @Injectable()
 export class NurseEffects {
 
@@ -12,6 +13,7 @@ export class NurseEffects {
     ofType<any>(NurseActions.loadNurses),
     switchMap((action) => {
       return this.nursesService.getAllNurses().pipe(
+        takeUntil(this.subService.unsubscribe$),
         map((nurses) => NurseActions.loadNursesComplete( {nurses} ))
       );
     })
@@ -21,6 +23,7 @@ export class NurseEffects {
     ofType<any>(NurseActions.getNurse),
     switchMap((action) => {
       return this.nursesService.getNurse(action.id).pipe(
+        takeUntil(this.subService.unsubscribe$),
         map((nurse) => NurseActions.getNurseLoaded({nurse}))
       );
     })
@@ -66,7 +69,8 @@ export class NurseEffects {
 
   constructor(
     private actions$: Actions,
-    private nursesService: NursesService
+    private nursesService: NursesService,
+    private subService: SubscriptionService
   ) {}
 
 }

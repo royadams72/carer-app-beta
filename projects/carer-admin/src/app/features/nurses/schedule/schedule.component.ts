@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { State } from '../../../state/reducers';
 import { getSelectedNurseId, getSchedule } from 'carer-admin/src/app/state/selectors';
 import { Observable } from 'rxjs';
 import { Nurse, Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
 import { NurseActions } from 'carer-admin/src/app/state/actions';
 import { scheduler } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-schedule',
@@ -21,13 +22,14 @@ export class ScheduleComponent implements OnInit {
 
   constructor(private store: Store<State>) {
     this.nurseId$ = this.store.select(getSelectedNurseId);
-    this.nurseSchedule$ = this.store.select(getSchedule);
+    // this.nurseSchedule$ = this.store.select(getSchedule);
   }
 
   ngOnInit() {
-    this.nurseSchedule$.subscribe((data => { if (data) { this.appointments = data; } }));
+    this.nurseSchedule$ = this.store.pipe(select(getSchedule));
     this.nurseId$.subscribe((data => {if (data) { this.id = data; }}));
   }
+
   onAppointmentUpdated(schedule: Schedule) {
     this.store.dispatch(NurseActions.updateNurseAppointment({nurseId: this.id, schedule}));
   }

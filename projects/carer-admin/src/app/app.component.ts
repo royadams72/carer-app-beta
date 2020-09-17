@@ -12,7 +12,6 @@ export class AppComponent implements OnInit {
   title = 'carer-admin';
  constructor(private store: Store<State>) {}
   ngOnInit(): void {
-    console.log('loadNurses');
-    this.store.dispatch(NurseActions.loadNurses());
+
   }
 }
