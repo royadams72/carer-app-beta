@@ -5,9 +5,8 @@ import { NurseActions } from 'carer-admin/src/app/state/actions';
 import { editNurseForm } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
 import { FormService } from 'carer-admin/src/app/shared/services/forms/form.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subscription, combineLatest } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { getTempNurse } from 'carer-admin/src/app/state/selectors';
-import { Nurse } from 'carer-admin/src/app/shared/models/nurse.model';
 import { take } from 'rxjs/operators';
 import { ControlType } from 'carer-admin/src/app/core/enum/control-type';
 
@@ -39,14 +38,7 @@ export class CreateNurseComponent implements OnInit, OnDestroy {
           if (!formState || this.form.get(key).value !== '' && this.form.get(key).status === 'VALID'
             && formState[key] !== this.form.get(key).value) {
             console.log(this.form.get(key).value);
-            // @ts-ignore
-            // value = this.formConfig[key].controlType === ControlType.DatePicker ? value.toISOSrting() : value;
-            // if (this.formConfig[key].controlType === ControlType.DatePicker ) {
-            //   this.form.get(key).setValue(new Date(this.form.get(key).value.toString()));
-            //   console.log(new Date(this.form.get(key).value.toISOString()));
-            // }
             this.store.dispatch(NurseActions.saveNurseForm({ key, value: this.form.get(key).value  }));
-
           }
 
         });
@@ -69,25 +61,10 @@ export class CreateNurseComponent implements OnInit, OnDestroy {
   onSubmit(): void {
 
     if (this.form.invalid) { return; }
-    const data = this.mapForm(this.form, this.formConfig);
+    const data = this.formService.mapSubmitFormData(this.form, this.formConfig);
     console.log(data);
     this.store.dispatch(NurseActions.addNurse({ nurse: data }));
 
   }
 
-
-   // TODO: Put in service
-
-  mapForm(form: FormGroup, formProperties: any) {
-    const submitData: any = {};
-    Object.keys(form.controls).forEach((key) => {
-      submitData[key] = formProperties[key].controlType === ControlType.DatePicker && typeof form.get(key).value !== 'string' ?
-      form.get(key).value.toISOString() : form.get(key).value;
-      console.log(submitData[key]);
-
-    });
-    // Add id
-    // submitData.id = this.id$;
-    return submitData;
-  }
 }
