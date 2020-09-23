@@ -8,6 +8,7 @@ import { EditNurseComponent } from './edit-nurse/edit-nurse.component';
 import { MaterialModule } from '../../core/modules/material-module';
 import { CustomFormModule } from '../../shared/components/forms/form.module';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { CreateNurseComponent } from './create-nurse/create-nurse.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
     path: 'nurse-schedule',
     component: ScheduleComponent
   },
+  {
+    path: 'create-nurse',
+    component: CreateNurseComponent
+  }
 ];
 
 @NgModule({
@@ -37,6 +42,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CustomFormModule
   ],
-  declarations: [NursesComponent, ViewNurseComponent, EditNurseComponent, ScheduleComponent]
+  declarations: [NursesComponent, ViewNurseComponent, EditNurseComponent, ScheduleComponent, CreateNurseComponent]
 })
 export class NursesModule {}

@@ -20,6 +20,16 @@ export const getSelectedNurse = createSelector(
 
   }
 );
+
+export const getTempNurse = createSelector(
+  selectedNurse,
+  (state: NurseState) => {
+    if (state.tempNurse) {
+    return state.tempNurse;
+    }
+
+  }
+);
 export const getSelectedNurseId = createSelector(
   selectedNurse,
   (state: NurseState) => {

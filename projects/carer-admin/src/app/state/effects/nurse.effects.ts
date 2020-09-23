@@ -29,11 +29,20 @@ export class NurseEffects {
     })
   ));
 
+  addNurse$ = createEffect(() => this.actions$.pipe(
+    ofType<any>(NurseActions.addNurse),
+    switchMap((action) => {
+      return this.nursesService.addNurse(action.nurse).pipe(
+        map(() => NurseActions.nurseAdded())
+        );
+    })
+  ));
+
   updateNurse$ = createEffect(() => this.actions$.pipe(
     ofType<any>(NurseActions.updateNurse),
     switchMap((action) => {
       return this.nursesService.updateNurse(action.nurse).pipe(
-        map((nurse) => NurseActions.nurseUpdated())
+        map(() => NurseActions.nurseUpdated())
         );
     })
   ));
