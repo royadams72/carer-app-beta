@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ControlType } from '../../../core/enum/control-type';
+import { Observable } from 'rxjs';
 /**
  * Generic class to allow controlling formgroups
  */
@@ -47,6 +48,20 @@ export class FormService {
         return form;
     }
 
+    mapSubmitFormData(form: FormGroup, formProperties: any, id = '') {
+        const submitData: any = {};
+        Object.keys(form.controls).forEach((key) => {
+            submitData[key] = formProperties[key].controlType === ControlType.DatePicker && typeof form.get(key).value !== 'string' ?
+                form.get(key).value.toISOString() : form.get(key).value;
+            console.log(submitData[key]);
+        });
+        // if editing use passed in id
+        if (id) {
+            submitData.id = id;
+        }
+
+        return submitData;
+    }
     /**
      * Forces update of formgroup validity
      *  {FormGroup} form - the current formgroup

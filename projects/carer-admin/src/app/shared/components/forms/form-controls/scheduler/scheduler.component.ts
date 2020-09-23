@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter, Renderer2, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input,
+        Output, EventEmitter, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
 import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
 @Component({
