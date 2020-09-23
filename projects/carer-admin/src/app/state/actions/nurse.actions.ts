@@ -21,6 +21,22 @@ export const addNurse = createAction(
   '[NurseState] Adding Nurse', props<{nurse: Nurse}>()
 );
 
+export const nurseAdded = createAction(
+  '[NurseState] Nurse Added'
+);
+
+export const saveNurseForm = createAction(
+  '[NurseState] Saving Part of Nurse', props<{key: any, value: any}>()
+);
+
+export const saveNurseFormDone = createAction(
+  '[NurseState] Save Part of Nurse Done'
+);
+
+export const clearTempNurse = createAction(
+  '[NurseState] Temp Nurse Cleared'
+);
+
 export const updateNurse = createAction(
   '[NurseState] Updating Nurse', props<{nurse: Nurse}>()
 );
@@ -56,8 +72,9 @@ export const appointmentDeleted = createAction(
 export const nurseAppointmentFaild = createAction(
   '[NurseState] Appointment Faild'
 );
-// deleteNurseAppointmentFaild
+
 export type NurseActionsUnion = ReturnType<typeof loadNurses | typeof loadNursesComplete |
-            typeof getNurse | typeof getNurseLoaded | typeof addNurse | typeof updateNurse | typeof nurseUpdated |
+            typeof getNurse | typeof getNurseLoaded | typeof addNurse | typeof nurseAdded | typeof updateNurse | typeof nurseUpdated |
             typeof addNurseAppointment | typeof nurseAppointmentAdded | typeof updateNurseAppointment | typeof appointmentUpdated |
-            typeof deleteNurseAppointment | typeof appointmentDeleted | typeof nurseAppointmentFaild>;
+            typeof deleteNurseAppointment | typeof appointmentDeleted | typeof nurseAppointmentFaild | typeof saveNurseForm |
+            typeof saveNurseFormDone | typeof clearTempNurse>;

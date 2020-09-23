@@ -22,16 +22,6 @@ export const editNurseForm = {
             errorMessages: { required: 'Enter something'},
             controlType: ControlType.Control
         },
-        availability: {
-            name: 'availability',
-            label: 'Availability',
-            placeholder: 'Availability',
-            hint: 'Hint',
-            appearance: 'outline',
-            validation: [Validators.required],
-            errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Control
-        },
         band: {
             name: 'band',
             label: 'Band',
@@ -60,7 +50,7 @@ export const editNurseForm = {
             appearance: 'outline',
             validation: [Validators.required],
             errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Control
+            controlType: ControlType.DatePicker
         },
         distance_willing_to_work: {
             name: 'distance_willing_to_work',
@@ -86,7 +76,7 @@ export const editNurseForm = {
             appearance: 'outline',
             validation: [Validators.required],
             errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Control
+            controlType: ControlType.DatePicker
         },
         first_name: {
             name: 'first_name',
@@ -136,7 +126,7 @@ export const editNurseForm = {
             appearance: 'outline',
             validation: [Validators.required],
             errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Control
+            controlType: ControlType.DatePicker
         },
         registration: {
             name: 'registration',
@@ -146,7 +136,7 @@ export const editNurseForm = {
             appearance: 'outline',
             validation: [Validators.required],
             errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Control
+            controlType: ControlType.DatePicker
         },
         start_date: {
             name: 'start_date',
@@ -166,19 +156,31 @@ export const editNurseForm = {
             appearance: 'outline',
             validation: [Validators.required],
             errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Control
-        },
-        visits: {
-            name: 'visits',
-            label: 'Visits',
-            placeholder: 'Visits',
-            hint: 'Hint',
-            appearance: 'outline',
-            validation: [Validators.required],
-            errorMessages: { required: 'Enter something'},
-            controlType: ControlType.Option
+            controlType: ControlType.DatePicker
         }
 };
+
+// availability: {
+//     name: 'availability',
+//     label: 'Availability',
+//     placeholder: 'Availability',
+//     hint: 'Hint',
+//     appearance: 'outline',
+//     validation: [Validators.required],
+//     errorMessages: { required: 'Enter something'},
+//     controlType: ControlType.Control
+// },
+// ,
+//         visits: {
+//             name: 'visits',
+//             label: 'Visits',
+//             placeholder: 'Visits',
+//             hint: 'Hint',
+//             appearance: 'outline',
+//             validation: [Validators.required],
+//             errorMessages: { required: 'Enter something'},
+//             controlType: ControlType.Option
+//         }
 
 
 export const scheduler = {

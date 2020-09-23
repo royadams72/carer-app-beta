@@ -55,7 +55,7 @@ updateNurse(nurse: Nurse): Observable<any> {
 
   addNurse(nurse: Nurse) {
     this.document = this.angularFireStore.doc<Nurse>(`nurses/${nurse.id}`);
-    this.itemsCollection.add(nurse);
+    return of(this.itemsCollection.add(nurse));
   }
 
   addNurseAppointment(id: string, appointment: Schedule) {
