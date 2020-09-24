@@ -8,7 +8,7 @@ import { Nurse } from 'carer-admin/src/app/shared/models/nurse.model';
 import { getSelectedNurse, getSelectedNurseId } from 'carer-admin/src/app/state/selectors';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormService } from 'carer-admin/src/app/shared/services/forms/form.service';
-import { editNurseForm } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
+import { nurseForm } from 'carer-admin/src/app/shared/components/forms/form-configs/nurse-config';
 
 @Component({
   selector: 'app-edit-nurse',
@@ -22,7 +22,7 @@ export class EditNurseComponent implements OnInit {
   form: FormGroup;
   fb: FormBuilder = new FormBuilder();
   private subscriptions = new Subscription();
-  formConfig = editNurseForm;
+  formConfig = nurseForm;
 
   constructor(private store: Store<State>,
               private route: ActivatedRoute,

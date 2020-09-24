@@ -1,7 +1,7 @@
 import { ControlType } from 'carer-admin/src/app/core/enum/control-type';
 import { Validators } from '@angular/forms';
 
-export const editNurseForm = {
+export const nurseForm = {
         address_line1: {
             name: 'address_line1',
             label: 'Addres Line 1',
@@ -36,6 +36,16 @@ export const editNurseForm = {
             name: 'city',
             label: 'City',
             placeholder: 'City',
+            hint: 'Hint',
+            appearance: 'outline',
+            validation: [Validators.required],
+            errorMessages: { required: 'Enter something'},
+            controlType: ControlType.Control
+        },
+        client_types: {
+            name: 'client_types',
+            label: 'List Client Type Codes',
+            placeholder: 'List Client Type Codes',
             hint: 'Hint',
             appearance: 'outline',
             validation: [Validators.required],
@@ -92,6 +102,16 @@ export const editNurseForm = {
             name: 'last_name',
             label: 'Last Name',
             placeholder: 'Last Name',
+            hint: 'Hint',
+            appearance: 'outline',
+            validation: [Validators.required],
+            errorMessages: { required: 'Enter something'},
+            controlType: ControlType.Control
+        },
+        max_clients: {
+            name: 'max_clients',
+            label: 'Maximum Amount of Clients',
+            placeholder: 'Max Clients',
             hint: 'Hint',
             appearance: 'outline',
             validation: [Validators.required],
@@ -160,28 +180,47 @@ export const editNurseForm = {
         }
 };
 
-// availability: {
-//     name: 'availability',
-//     label: 'Availability',
-//     placeholder: 'Availability',
-//     hint: 'Hint',
-//     appearance: 'outline',
-//     validation: [Validators.required],
-//     errorMessages: { required: 'Enter something'},
-//     controlType: ControlType.Control
-// },
-// ,
-//         visits: {
-//             name: 'visits',
-//             label: 'Visits',
-//             placeholder: 'Visits',
-//             hint: 'Hint',
-//             appearance: 'outline',
-//             validation: [Validators.required],
-//             errorMessages: { required: 'Enter something'},
-//             controlType: ControlType.Option
-//         }
+export const visits = {
+    visit_date: {
+        name: 'visit_date',
+        label: 'Visit Date',
+        placeholder: 'Visit Date',
+        appearance: 'outline',
+        validation: [Validators.required],
+        errorMessages: { required: 'Enter something' },
+        controlType: ControlType.DatePicker
+    },
+    visit_notes: {
+        name: 'visit_notes',
+        label: 'Visit Notes',
+        placeholder: 'Visit Notes',
+        appearance: 'outline',
+        validation: [Validators.required],
+        errorMessages: { required: 'Enter something' },
+        controlType: ControlType.Control
+    }
+};
 
+export const previousAppraisals = {
+    appraisal_date: {
+        name: 'appraisal_date',
+        label: 'Appraisal Date',
+        placeholder: 'Appraisal Date',
+        appearance: 'outline',
+        validation: [Validators.required],
+        errorMessages: { required: 'Enter something' },
+        controlType: ControlType.DatePicker
+    },
+    visit_notes: {
+        name: 'visit_notes',
+        label: 'Visit Notes',
+        placeholder: 'Visit Notes',
+        appearance: 'outline',
+        validation: [Validators.required],
+        errorMessages: { required: 'Enter something' },
+        controlType: ControlType.Control
+    }
+};
 
 export const scheduler = {
     source: {

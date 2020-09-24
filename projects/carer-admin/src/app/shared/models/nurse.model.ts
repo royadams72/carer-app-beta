@@ -3,11 +3,11 @@ export interface NurseClients {
     client_types?: string[];
     current_amount_of_clients?: number;
     max_clients?: number;
-    visit_notes?: string[];
+    visits?: string[];
 }
 export interface NurseAppraisal {
     next_appraisal?: string;
-    nurse_appraisals?: Array<{
+    previous_appraisals?: Array<{
         appraisals_date?: string;
         notes?: string;
     }>;

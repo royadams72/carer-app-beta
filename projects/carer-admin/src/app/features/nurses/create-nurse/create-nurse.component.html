@@ -1,4 +1,5 @@
 <p>Create Nurse</p>
+
 <app-text-field [config]="formConfig.first_name" [formGroup]="form"></app-text-field>
 <app-text-field [config]="formConfig.last_name" [formGroup]="form"></app-text-field>
 <app-date-picker [config]="formConfig.dob" [formGroup]="form"></app-date-picker>
@@ -13,5 +14,8 @@
 <app-date-picker [config]="formConfig.registration" [formGroup]="form"></app-date-picker>
 <app-date-picker [config]="formConfig.probation_end" [formGroup]="form"></app-date-picker>
 <app-text-field [config]="formConfig.phone" [formGroup]="form"></app-text-field>
+<app-text-field [config]="formConfig.max_clients" [formGroup]="form"></app-text-field>
+<app-text-field [config]="formConfig.client_types" [formGroup]="form"></app-text-field>
+<!--  -->
 <app-select [config]="formConfig.distance_willing_to_work" [formGroup]="form"></app-select>
 <button mat-button color="primary" (click)="onSubmit()">Primary</button>
