@@ -5,7 +5,7 @@ import { getSelectedNurseId, getSchedule } from 'carer-admin/src/app/state/selec
 import { Observable } from 'rxjs';
 import { Nurse, Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
 import { NurseActions } from 'carer-admin/src/app/state/actions';
-import { scheduler } from 'carer-admin/src/app/shared/components/forms/form-configs/edit-nurse';
+import { scheduler } from 'carer-admin/src/app/shared/components/forms/form-configs/nurse-config';
 import { tap } from 'rxjs/operators';
 
 @Component({
