@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input,
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, Input,
         Output, EventEmitter, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 import { jqxSchedulerComponent } from 'jqwidgets-ng/jqxscheduler';
 import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
@@ -9,7 +9,7 @@ import { Schedule } from 'carer-admin/src/app/shared/models/nurse.model';
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
+export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('schedulerReference', {static: false}) scheduler: jqxSchedulerComponent;
   @Input() appointments: Array<Schedule>;
   @Input() config: any;
@@ -18,13 +18,20 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() addedAppointment: EventEmitter<any> = new EventEmitter();
   dataAdapter: jqxSchedulerComponent;
   date = new jqx.date(new Date());
+  fields: any;
   validFields = [];
+  fieldsToDisable = [];
   saveButton: HTMLTextAreaElement;
   countries: string[] =
   new Array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antarctica', 'Antigua and Barbuda', 'Argentina');
   element: any;
   clientMatchFound: boolean;
+  appraisalCheckBox: any;
+  holidayCheckBox: any;
+  clientInputComponent: any;
+
   constructor(private renderer: Renderer2) {  }
+  
   appointmentUpdated($event) {
     // Appointment updated
     const appointment = this.getAppointment($event);
@@ -38,7 +45,8 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
 
   appointmentAdded($event) {
     const appointment = this.getAppointment($event);
-    this.addedAppointment.emit(appointment);
+    // console.log(this.appraisalCheckBox.host.val())
+    // this.addedAppointment.emit(appointment);
   }
 
   ngOnInit() {
@@ -49,11 +57,13 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
   editDialogOpen = (dialog, fields, editAppointment) => {
     if (fields) {
       this.validFields = [];
+      this.fields = fields;
       fields.statusContainer.hide();
       fields.timeZoneContainer.hide();
       fields.resourceContainer.hide();
       fields.subjectLabel.html('Client');
       fields.colorContainer.hide();
+      // fields.repeatContainer.hide();
       setTimeout(() => {
         fields.allDay.jqxCheckBox('uncheck');
         fields.allDayContainer.hide();
@@ -62,8 +72,12 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
         if (!editAppointment) {
           this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
         }
+
         this.setUpJqInput(fields.subject[0].id);
-        // TODO: need to add validation to make sure the client is not mis spelled and matches DB
+        this.appraisalCheckBox = this.buildCheckBox('appraisal', 'Add Appraisal', this.appraisalCheckBox, fields.subjectContainer[0]);
+
+        this.holidayCheckBox = this.buildCheckBox('holiday', 'Add Holiday', this.holidayCheckBox, fields.subjectContainer[0]);
+        // TODO: need to add validation to make sure the client is not misspelled and matches DB
         this.addValidation(fields.subject[0].id, fields.subjectContainer[0], 'Please make sure Client is filled in');
         this.matchAgainstArray(fields.subject[0].id, fields.subjectContainer[0], 'Please make sure Client is spelt correctly');
         this.addValidation(fields.location[0].id, fields.locationContainer[0], 'Please make sure Location is filled in');
@@ -108,16 +122,157 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   }
+
+  setUpCheckBoxes(mainContainer): void {
+      const appraisalcheckbox  = this.renderer.createElement('div');
+      const appraisalContainer = this.renderer.createElement('div');
+      const appraisallabel = this.renderer.createElement('label');
+      const text = this.renderer.createText('Add Appraisal');
+
+      this.renderer.setAttribute(appraisalContainer, 'id', `appraisalContainer`);
+
+      if (document.getElementById('appraisalContainer')) {
+        this.appraisalCheckBox.host.jqxCheckBox('uncheck');
+        return;
+      }
+      this.renderer.setAttribute(appraisalcheckbox, 'id', `appraisalCheckBox`);
+      this.renderer.setStyle(appraisalcheckbox, 'width', '20px');
+      this.renderer.setStyle(appraisalContainer, 'height', '20px');
+      this.renderer.setStyle(appraisalContainer, 'width', '400px');
+      this.renderer.setStyle(appraisalContainer, 'float', 'right');
+      this.renderer.setStyle(appraisallabel, 'display', 'inline-block');
+      this.renderer.setStyle(appraisalcheckbox, 'display', 'inline-block');
+
+      this.renderer.appendChild(appraisalContainer, appraisalcheckbox);
+      this.renderer.appendChild(appraisalContainer, appraisallabel);
+
+      this.renderer.appendChild(appraisallabel, text);
+
+
+      this.renderer.appendChild(mainContainer, appraisalContainer);
+      this.appraisalCheckBox =  jqwidgets.createInstance(`#appraisalCheckBox`, 'jqxCheckBox', {checked: 'appraisal'});
+      this.appraisalCheckBox.host.jqxCheckBox('uncheck');
+
+      this.appraisalCheckBox.addEventHandler('checked', () => {
+        // console.log(this.appraisalCheckBox.host.val())
+        this.disableInput(true);
+      });
+      this.appraisalCheckBox.addEventHandler('unchecked', () => {
+        this.disableInput(false);
+      });
+  }
+  ////////
+  buildCheckBox(name: string, labelText: string, localVar: any, mainContainer: any) {
+   
+    // console.log(document.getElementById(`${name}Container`), mainContainer);
+    if (document.getElementById(`${name}Container`)) {
+     
+      // localVar.host.jqxCheckBox('uncheck');
+      // return localVar;
+      // this.renderer.removeChild(mainContainer, document.getElementById(`${name}Container`));
+      // console.log(document.getElementById(`${name}CheckBox`));
+      // console.log(document.getElementById(`${name}Container`).childNodes);
+      // console.log(document.getElementById(`${name}Container`).firstChild);
+
+      // while (document.getElementById(`${name}Container`).firstChild) {
+      //   // console.log(document.getElementById(`${name}Container`).firstChild);
+      //   document.getElementById(`${name}Container`).removeChild(document.getElementById(`${name}Container`).lastChild);
+      // }
+
+      // tslint:disable-next-line: prefer-for-of
+      // const con = document.getElementById(`${name}Container`);
+      // console.log(con.childNodes.length);
+      // for (let i = 0; i < con.childNodes.length; i++) {
+      //   console.log(con.childNodes[i]);
+      //   document.getElementById(`${name}Container`).removeChild(con.childNodes[i]);
+      //   // console.log((i + 1), con.childNodes.length, con.childNodes[i]);
+        
+      //   if ((i + 1) === con.childNodes.length || !con.childNodes[i]) {
+      //     mainContainer.removeChild(con);
+      //     // console.log(mainContainer);
+      //   }
+      // }
+      // const [els] = [...document.getElementById(`${name}Container`).childNodes]
+      // for (const child of document.getElementById(`${name}Container`).childNodes) {
+      //   document.getElementById(`${name}Container`).removeChild(child)
+      // }
+      // document.getElementById(`${name}Container`).removeChild(document.getElementById(`${name}CheckBox`));
+      // document.getElementById(`${name}Container`).removeChild(document.getElementById('mfLabel'));
+      mainContainer.removeChild(document.getElementById(`${name}Container`));
+     
+      
+      
+      
+    }
+    const checkbox  = this.renderer.createElement('div');
+    const container = this.renderer.createElement('div');
+    const label = this.renderer.createElement('label');
+    const text = this.renderer.createText(`${labelText}`);
+
+    this.renderer.setAttribute(container, 'id', `${name}Container`);
+    this.renderer.setAttribute(checkbox, 'id', `${name}CheckBox`);
+    this.renderer.setAttribute(label, 'id', `mfLabel`);
+    this.renderer.setStyle(checkbox, 'width', '20px');
+    this.renderer.setStyle(container, 'height', '20px');
+    this.renderer.setStyle(container, 'width', '400px');
+    this.renderer.setStyle(container, 'float', 'right');
+    this.renderer.setStyle(label, 'display', 'inline-block');
+    this.renderer.setStyle(checkbox, 'display', 'inline-block');
+
+    this.renderer.appendChild(label, text);
+    this.renderer.appendChild(container, checkbox);
+    this.renderer.appendChild(container, label);
+
+
+
+
+    this.renderer.appendChild(mainContainer, container);
+    localVar =  jqwidgets.createInstance(`#${name}CheckBox`, 'jqxCheckBox', {checked: `${name}`});
+    localVar.host.jqxCheckBox('uncheck');
+
+    // console.log(document.getElementById(`${name}CheckBox`));
+    localVar.addEventHandler('checked', () => {
+      // console.log(this.appraisalCheckBox)
+      this.disableInput(true);
+    });
+    localVar.addEventHandler('unchecked', () => {
+      this.disableInput(false);
+    });
+    this.fieldsToDisable.push(localVar);
+    return localVar;
+  }
+
+  disableInput(isChecked: boolean): void {
+    this.renderer.setProperty(this.clientInputComponent.input, 'disabled', isChecked);
+    this.renderer.setProperty(this.clientInputComponent.input, 'value', '');
+    const length = this.fieldsToDisable.length;
+    const checksToDisable = this.fieldsToDisable.filter((checkBox) => {
+      return checkBox.checked === false;
+    });
+    if (checksToDisable.length === this.fieldsToDisable.length) {
+      this.fieldsToDisable.forEach((check) => {
+        check.host.jqxCheckBox('enable');
+        this.fields.repeatContainer.show();
+      });
+    } else {
+      checksToDisable.forEach((check) => {
+        check.host.jqxCheckBox('disable');
+        this.fields.repeatContainer.hide();
+      });
+    }
+    // console.log(checksToDisable);
+  }
+
   setUpJqInput(fieldID) {
-    const clientInputComponent = jqwidgets.createInstance(`#${fieldID}`, 'jqxInput', {
+    this.clientInputComponent = jqwidgets.createInstance(`#${fieldID}`, 'jqxInput', {
       placeHolder: 'Enter a Client',
       source: this.countries
     });
 
-    clientInputComponent.addEventHandler('open', () => {
+    this.clientInputComponent.addEventHandler('open', () => {
       document.getElementById(`${fieldID}_popup`).style.zIndex = '2005';
     });
-    return clientInputComponent;
+    return this.clientInputComponent;
   }
 
   matchAgainstArray(fieldToCheckId, fieldContainer, errorText) {
@@ -173,13 +328,25 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
 
   editDialogClose = (dialog, fields, editAppointment) => {
     if (fields) {
-    fields.allDay.jqxCheckBox('check');
+    // console.log(fields.allDay);
+    // console.log(this.appraisalCheckBox.host);
+    // console.log(this.appraisalCheckBox.element);
+    // fields.allDay.jqxCheckBox('check');
 
     }
   }
 
   ngAfterViewInit(): void {
     this.showLegendFix();
+    if (document.getElementById(`appraisalContainer`)) {
+      const container = this.renderer.parentNode(document.getElementById(`appraisalContainer`));
+      container.removeChild(document.getElementById(`appraisalContainer`));
+      container.removeChild(document.getElementById(`holidayContainer`));
+      console.log(container);
+    }
+    
+    // document.getElementById(`${name}Container`).removeChild(document.getElementById(`${name}CheckBox`));
+    // console.log(document.getElementById(`appraisalContainer`), document.getElementById(`holidayContainer`));
   }
 
   showLegendFix() {
@@ -189,7 +356,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
     this.renderer.removeStyle(legendBar, 'display');
   }
 
-  setUpSchedulerInfo(changes) {
+  refreshSchedulerInfo(changes) {
     this.config.source.localData = changes.appointments.currentValue;
     this.config.resources.source = new jqx.dataAdapter(this.config.source);
     this.dataAdapter = new jqx.dataAdapter(this.config.source);
@@ -206,7 +373,9 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.setUpSchedulerInfo(changes);
+    this.refreshSchedulerInfo(changes);
   }
-
+  ngOnDestroy(): void {
+    document.getElementById(`${name}Container`)
+  }
 }

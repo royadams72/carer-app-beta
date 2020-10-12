@@ -9,12 +9,16 @@ export const loadNursesComplete = createAction(
   '[NurseState] Nurses Loaded', props<{nurses: Nurse[]}>()
 );
 
-export const getNurse = createAction(
-  '[NurseState] Get Nurse', props<{id: string}>()
+export const getSelectedNurse = createAction(
+  '[NurseState] Get Selected Nurse', props<{id: string}>()
 );
 
-export const getNurseLoaded = createAction(
-  '[NurseState] Get Nurse Loaded', props<{nurse: Nurse}>()
+export const selectedNurseLoaded = createAction(
+  '[NurseState] Selected Nurse Loaded', props<{nurse: Nurse}>()
+);
+
+export const clearSelectedNurse = createAction(
+  '[NurseState] Selected Nurse Cleared'
 );
 
 export const addNurse = createAction(
@@ -74,7 +78,7 @@ export const nurseAppointmentFaild = createAction(
 );
 
 export type NurseActionsUnion = ReturnType<typeof loadNurses | typeof loadNursesComplete |
-            typeof getNurse | typeof getNurseLoaded | typeof addNurse | typeof nurseAdded | typeof updateNurse | typeof nurseUpdated |
-            typeof addNurseAppointment | typeof nurseAppointmentAdded | typeof updateNurseAppointment | typeof appointmentUpdated |
-            typeof deleteNurseAppointment | typeof appointmentDeleted | typeof nurseAppointmentFaild | typeof saveNurseForm |
-            typeof saveNurseFormDone | typeof clearTempNurse>;
+            typeof getSelectedNurse | typeof selectedNurseLoaded | typeof addNurse | typeof nurseAdded | typeof updateNurse|
+            typeof nurseUpdated | typeof addNurseAppointment | typeof nurseAppointmentAdded | typeof updateNurseAppointment |
+            typeof appointmentUpdated | typeof deleteNurseAppointment | typeof appointmentDeleted | typeof nurseAppointmentFaild |
+            typeof saveNurseForm | typeof saveNurseFormDone | typeof clearTempNurse>;

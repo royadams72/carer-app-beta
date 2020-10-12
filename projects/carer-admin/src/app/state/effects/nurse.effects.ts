@@ -20,11 +20,11 @@ export class NurseEffects {
   ));
 
   getNurse$ = createEffect(() => this.actions$.pipe(
-    ofType<any>(NurseActions.getNurse),
+    ofType<any>(NurseActions.getSelectedNurse),
     switchMap((action) => {
       return this.nursesService.getNurse(action.id).pipe(
         takeUntil(this.subService.unsubscribe$),
-        map((nurse) => NurseActions.getNurseLoaded({nurse}))
+        map((nurse) => NurseActions.selectedNurseLoaded({nurse}))
       );
     })
   ));
