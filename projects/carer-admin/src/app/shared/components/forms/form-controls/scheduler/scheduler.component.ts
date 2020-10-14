@@ -19,7 +19,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
   dataAdapter: jqxSchedulerComponent;
   date = new jqx.date(new Date());
   fields: any;
-  validFields = [];
+  validFields: any;;
   fieldsToDisable = [];
   saveButton: HTMLTextAreaElement;
   countries: string[] =
@@ -59,7 +59,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   appointmentAdded($event) {
     const appointment = this.getAppointment($event);
-    // console.log(this.appraisalCheckBox.host.val())
+    console.log(this.appraisalCheckBox.host.val());
     // this.addedAppointment.emit(appointment);
   }
 
@@ -70,7 +70,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   editDialogOpen = (dialog, fields, editAppointment) => {
     if (fields) {
-      this.validFields = [];
+      this.validFields = {};
       this.fields = fields;
       fields.statusContainer.hide();
       fields.timeZoneContainer.hide();
@@ -86,15 +86,14 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
         if (!editAppointment) {
           this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
         }
-
+        console.log(editAppointment);
         this.setUpJqInput(fields.subject[0].id);
         this.buildCheckBoxes(fields.subjectContainer[0]);
         // this.appraisalCheckBox = this.buildCheckBox('appraisal', 'Add Appraisal', this.appraisalCheckBox, fields.subjectContainer[0]);
 
         // this.holidayCheckBox = this.buildCheckBox('holiday', 'Add Holiday', this.holidayCheckBox, fields.subjectContainer[0]);
         // TODO: need to add validation to make sure the client is not misspelled and matches DB
-        this.addValidation(fields.subject[0].id, fields.subjectContainer[0], 'Please make sure Client is filled in');
-        this.matchAgainstArray(fields.subject[0].id, fields.subjectContainer[0], 'Please make sure Client is spelt correctly');
+        this.addValidationToClientField();
         this.addValidation(fields.location[0].id, fields.locationContainer[0], 'Please make sure Location is filled in');
         this.addValidation(fields.description[0].id, fields.descriptionContainer[0], 'Please make sure Description is filled in');
       });
@@ -103,12 +102,26 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
   }
 
-  addValidation(fieldToCheckId, fieldContainer, errorText) {
+  addValidationToClientField(): void {
+    this.addValidation(this.fields.subject[0].id, this.fields.subjectContainer[0], 'Please make sure Client is filled in');
+    this.matchAgainstArray(this.fields.subject[0].id, this.fields.subjectContainer[0], 'Please make sure Client is spelt correctly');
+  }
+  removeValidationToClientField(): void {
+    const clientFieldID = this.fields.subject[0].id;
+    // this.addValidation(this.fields.subject[0].id, this.fields.subjectContainer[0], 'Please make sure Client is filled in');
+    // this.matchAgainstArray(this.fields.subject[0].id, this.fields.subjectContainer[0], 'Please make sure Client is spelt correctly');
+    const field = (document.getElementById(this.fields.subject[0].id) as HTMLTextAreaElement);
+    // find the id in object
+    this.validFields[clientFieldID].listener();
+    this.validFields[clientFieldID].listener2();
+    // this.renderer.listen(field, 'change', (e) => {});
+    delete this.validFields[clientFieldID];
+  }
+  addValidation(fieldToCheckId: string, fieldContainer: any, errorText: string) {
     const errDivId = `${fieldToCheckId}_err`;
     const errDiv =  document.getElementById(errDivId);
     let err: any;
     let text: any;
-    let index;
     // Only add error div if it sn't been already
     if (!errDiv) {
       err = this.renderer.createElement('div');
@@ -125,18 +138,21 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
 
     const field = (document.getElementById(fieldToCheckId) as HTMLTextAreaElement);
-    index = this.validFields.push(field.value) - 1;
+    // index = this.validFields.push(field.value) - 1;
+
+
     //  push value o into array and get the i?
-    this.renderer.listen(field, 'keyup', (e) => {
+    const listener = this.renderer.listen(field, 'keyup', (e) => {
       const val = (e.target as HTMLTextAreaElement).value;
       val === '' ? this.renderer.setStyle(err, 'display', 'block') : this.renderer.setStyle(err, 'display', 'none');
-      this.validFields[index] = val;
-      // this.isFieldsEmpty();
+      this.validFields[fieldToCheckId][fieldToCheckId] = val;
+      console.log(this.validFields);
       this.checkAllValidation();
     });
-
-
+    // console.log({[fieldToCheckId]: field.value, listener});
+    this.validFields[fieldToCheckId] = {[fieldToCheckId]: field.value, listener};
   }
+
   buildCheckBoxes(mainContainer) {
     this.removeCheckBoxesFromDOM();
     Object.keys(this.checkBoxes).forEach((key) => {
@@ -166,9 +182,11 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
     this[`${key}CheckBox`].addEventHandler('checked', () => {
       // console.log(this.appraisalCheckBox)
       this.disableInput(true);
+      this.removeValidationToClientField();
     });
     this[`${key}CheckBox`].addEventHandler('unchecked', () => {
       this.disableInput(false);
+      this.addValidationToClientField();
     });
     this.fieldsToDisable.push(this[`${key}CheckBox`]);
 
@@ -213,15 +231,19 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
     //  push value o into array and get the i?
     const err = this.setUpErrorDiv(fieldToCheckId, errorText, fieldContainer);
     const field = (document.getElementById(fieldToCheckId) as HTMLTextAreaElement);
-    this.renderer.listen(field, 'change', (e) => {
+    const listener2 = this.renderer.listen(field, 'change', (e) => {
       const val = (e.target as HTMLTextAreaElement).value;
-      this.clientMatchFound = !!this.countries.find(item => item === val);
-      !this.clientMatchFound  ? this.renderer.setStyle(err, 'display', 'block') : this.renderer.setStyle(err, 'display', 'none');
+      const clientMatchFound = !!this.countries.find(item => item === val);
+      !clientMatchFound  ? this.renderer.setStyle(err, 'display', 'block') : this.renderer.setStyle(err, 'display', 'none');
+      this.validFields[fieldToCheckId].clientFound = clientMatchFound;
+      console.log(this.validFields[fieldToCheckId]);
       this.checkAllValidation();
     });
 
-
+    this.validFields[fieldToCheckId] = {...this.validFields[fieldToCheckId], listener2};
+    // console.log( this.validFields[fieldToCheckId]);
   }
+
   setUpErrorDiv(fieldToCheckId, errorText, fieldContainer) {
     const errDivId = `${fieldToCheckId}_err2`;
     const errDiv =  document.getElementById(errDivId);
@@ -248,15 +270,34 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   checkAllValidation() {
-    if (!this.isFieldsEmpty() && this.clientMatchFound) {
-      this.renderer.removeAttribute(this.saveButton, 'disabled');
-    } else {
-      this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
+
+    // const clientFound = this.validFields[this.fields.subject[0].id].clientFound;
+    if (!this.validFields[this.fields.subject[0].id] && !this.isFieldsEmpty() ||
+        !this.isFieldsEmpty() && this.validFields[this.fields.subject[0].id] && this.validFields[this.fields.subject[0].id].clientFound ) {
+
+        // console.log(this.validFields[this.fields.subject[0].id].clientFound );
+        this.renderer.removeAttribute(this.saveButton, 'disabled');
+      } else {
+        this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
+
     }
+
+    // else if (!this.isFieldsEmpty() && this.validFields[this.fields.subject[0].id] && clientFound ||
+    // !this.isFieldsEmpty() && this.validFields[this.fields.subject[0].id] === undefined) {
+    //   console.log(clientFound);
+    //   this.renderer.removeAttribute(this.saveButton, 'disabled');
+    // } else {
+    //   this.renderer.setAttribute(this.saveButton, 'disabled', 'true');
+    // }
   }
 
   isFieldsEmpty() {
-    return this.validFields.indexOf('') === -1 ? false : true;
+    let isEmpty: boolean;
+    Object.keys(this.validFields).forEach((key) => {
+      isEmpty = this.validFields[key][key] === '' ? true : false;
+    });
+
+    return isEmpty;
   }
 
   editDialogClose = (dialog, fields, editAppointment) => {
@@ -305,6 +346,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnChanges, OnD
   ngOnChanges(changes: SimpleChanges): void {
     this.refreshSchedulerInfo(changes);
   }
+
   ngOnDestroy(): void {
     document.getElementById(`${name}Container`)
   }
