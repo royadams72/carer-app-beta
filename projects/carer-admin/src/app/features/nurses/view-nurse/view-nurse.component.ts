@@ -20,7 +20,7 @@ selectedNurse$: Observable<Nurse>;
               private ns: NursesService,
               private route: ActivatedRoute,
               private subService: SubscriptionService) {
-                this.store.dispatch(NurseActions.getNurse({id: this.route.snapshot.params.id}));
+                this.store.dispatch(NurseActions.getSelectedNurse({id: this.route.snapshot.params.id}));
                }
 
   ngOnInit() {

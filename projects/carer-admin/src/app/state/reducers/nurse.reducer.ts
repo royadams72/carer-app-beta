@@ -21,13 +21,13 @@ const nurseReducer = createReducer(
   initialState,
   on(NurseActions.loadNurses, (state) => (state)),
   on(NurseActions.loadNursesComplete, (state, {nurses}) => ({ ...state, nurses })),
-  on(NurseActions.getNurse, (state) => (state)),
+  on(NurseActions.getSelectedNurse, (state) => (state)),
+  on(NurseActions.clearSelectedNurse, (state) => ({ ...state, selectedNurse: undefined })),
   on(NurseActions.updateNurse, updateNurse),
   on(NurseActions.addNurse, addNurse),
-  on(NurseActions.getNurseLoaded, (state, action) => ({ ...state, selectedNurse: action.nurse})),
+  on(NurseActions.selectedNurseLoaded, (state, action) => ({ ...state, selectedNurse: action.nurse})),
   on(NurseActions.saveNurseForm, saveNurseForm),
   on(NurseActions.clearTempNurse, (state) => ({ ...state, tempNurse: undefined })),
-
   on(NurseActions.addNurseAppointment, addNurseAppointment),
   on(NurseActions.updateNurseAppointment, updateNurseAppointment),
   on(NurseActions.deleteNurseAppointment, deleteNurseAppointment)

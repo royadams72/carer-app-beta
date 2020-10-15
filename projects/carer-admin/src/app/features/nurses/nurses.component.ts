@@ -21,10 +21,12 @@ nurses$: Observable<Nurse[]>;
               private ns: NursesService,
               private subService: SubscriptionService) {
     this.store.dispatch(NurseActions.loadNurses());
+    this.store.dispatch(NurseActions.clearSelectedNurse());
   }
 
   ngOnInit(): void {
     this.nurses$ = this.store.select(nurses);
+
   }
 
   ngOnDestroy(): void {
